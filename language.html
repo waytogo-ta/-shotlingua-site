@@ -9,23 +9,23 @@
     content="Choose your language to view the ShotLingua app introduction page."
   />
 
-<link rel="alternate" hreflang="ja" href="https://waytogo-ta.github.io/-shotlingua-site/marketing.html" />
-<link rel="alternate" hreflang="en" href="https://waytogo-ta.github.io/-shotlingua-site/marketing-en.html" />
-<link rel="alternate" hreflang="ko" href="https://waytogo-ta.github.io/-shotlingua-site/marketing-ko.html" />
-<link rel="alternate" hreflang="zh" href="https://waytogo-ta.github.io/-shotlingua-site/marketing-zh.html" />
-<link rel="alternate" hreflang="x-default" href="https://waytogo-ta.github.io/-shotlingua-site/language.html" />
-
+  <link rel="alternate" hreflang="ja" href="https://waytogo-ta.github.io/-shotlingua-site/marketing.html" />
+  <link rel="alternate" hreflang="en" href="https://waytogo-ta.github.io/-shotlingua-site/marketing-en.html" />
+  <link rel="alternate" hreflang="ko" href="https://waytogo-ta.github.io/-shotlingua-site/marketing-ko.html" />
+  <link rel="alternate" hreflang="zh" href="https://waytogo-ta.github.io/-shotlingua-site/marketing-zh.html" />
+  <link rel="alternate" hreflang="x-default" href="https://waytogo-ta.github.io/-shotlingua-site/language.html" />
 
   <style>
     :root {
       --bg: #f7f6f2;
-      --surface: #ffffff;
+      --card: #ffffff;
       --text: #1f2937;
       --muted: #6b7280;
       --line: #e5e7eb;
       --primary: #0f766e;
       --primary-dark: #115e59;
-      --shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      --pill: rgba(15, 118, 110, 0.1);
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
     }
 
     * {
@@ -35,8 +35,9 @@
     body {
       margin: 0;
       min-height: 100vh;
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 24px;
       background: var(--bg);
       color: var(--text);
@@ -44,21 +45,25 @@
       line-height: 1.7;
     }
 
+    .wrap {
+      width: 100%;
+      max-width: 720px;
+    }
+
     .card {
-      width: min(720px, 100%);
-      background: var(--surface);
+      background: var(--card);
       border: 1px solid var(--line);
       border-radius: 28px;
       padding: 32px 24px;
       box-shadow: var(--shadow);
     }
 
-    .label {
+    .badge {
       display: inline-block;
       margin-bottom: 16px;
       padding: 7px 12px;
       border-radius: 999px;
-      background: rgba(15, 118, 110, 0.08);
+      background: var(--pill);
       color: var(--primary);
       font-size: 14px;
       font-weight: 700;
@@ -66,8 +71,9 @@
 
     h1 {
       margin: 0 0 12px;
-      font-size: clamp(30px, 5vw, 48px);
+      font-size: clamp(30px, 5vw, 50px);
       line-height: 1.1;
+      letter-spacing: -0.02em;
     }
 
     .lead {
@@ -76,31 +82,34 @@
       font-size: 16px;
     }
 
-    .links {
+    .lang-grid {
       display: grid;
       gap: 12px;
+      margin-top: 20px;
     }
 
     .lang-link {
       display: block;
       text-decoration: none;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: #ffffff;
-      color: var(--text);
       padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      color: var(--text);
+      font-size: 17px;
       font-weight: 700;
-      transition: 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .lang-link:hover {
       border-color: var(--primary);
-      background: #f7fbfa;
+      background: #f4fbfa;
+      transform: translateY(-1px);
     }
 
     .lang-link.primary {
       background: var(--primary);
-      color: #ffffff;
+      color: #fff;
       border-color: var(--primary);
     }
 
@@ -109,19 +118,19 @@
       border-color: var(--primary-dark);
     }
 
-    .small {
+    .note {
       margin-top: 18px;
-      font-size: 14px;
       color: var(--muted);
+      font-size: 14px;
     }
 
-    .small a {
+    .note a {
       color: var(--primary);
-      font-weight: 700;
       text-decoration: none;
+      font-weight: 700;
     }
 
-    .small a:hover {
+    .note a:hover {
       text-decoration: underline;
     }
 
@@ -133,43 +142,28 @@
   </style>
 </head>
 <body>
-  <main class="card">
-    <div class="label">ShotLingua</div>
-    <h1>言語を選択してください</h1>
-    <p class="lead">
-      ご利用の言語に合わせて、ShotLingua の紹介ページを選択できます。
-      下のリンクからお好きな言語を選んでください。
-    </p>
+  <div class="wrap">
+    <main class="card">
+      <div class="badge">ShotLingua</div>
+      <h1>言語を選択してください</h1>
+      <p class="lead">
+        ShotLingua の紹介ページを、お好きな言語でご覧いただけます。
+        下のボタンから言語を選択してください。
+      </p>
 
-    <div class="links">
-      <a class="lang-link primary" href="marketing.html">日本語</a>
-      <a class="lang-link" href="marketing-en.html">English</a>
-      <a class="lang-link" href="marketing-ko.html">한국어</a>
-      <a class="lang-link" href="marketing-zh.html">中文</a>
-    </div>
+      <div class="lang-grid">
+        <a class="lang-link primary" href="marketing.html">日本語</a>
+        <a class="lang-link" href="marketing-en.html">English</a>
+        <a class="lang-link" href="marketing-ko.html">한국어</a>
+        <a class="lang-link" href="marketing-zh.html">中文</a>
+      </div>
 
-    <p class="small">
-      サポートページを見る場合は
-      <a href="https://waytogo-ta.github.io/-shotlingua-site/" target="_blank" rel="noopener noreferrer">こちら</a>
-      をご利用ください。
-    </p>
-  </main>
-
-  <script>
-    (function () {
-      var lang = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
-      lang = lang.toLowerCase();
-
-      if (lang.startsWith("ja")) {
-        window.location.replace("marketing.html");
-      } else if (lang.startsWith("ko")) {
-        window.location.replace("marketing-ko.html");
-      } else if (lang.startsWith("zh")) {
-        window.location.replace("marketing-zh.html");
-      } else {
-        window.location.replace("marketing-en.html");
-      }
-    })();
-  </script>
+      <p class="note">
+        サポートページは
+        <a href="https://waytogo-ta.github.io/-shotlingua-site/" target="_blank" rel="noopener noreferrer">こちら</a>
+        です。
+      </p>
+    </main>
+  </div>
 </body>
 </html>
