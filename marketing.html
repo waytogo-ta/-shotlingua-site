@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShotLingua | 公式ページ</title>
+  <meta
+    name="description"
+    content="ShotLingua は、韓国語・英語・日本語を、実際の生活や仕事の場面に合わせて学べる語学アプリです。留学・旅行・アルバイト・接客の場面で役立つ語彙や表現を、写真・会話練習・音声学習を通して身につけられます。"
+  />
+  <style>
+    :root {
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --surface-2: #f3f4f6;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Yu Gothic", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .container {
+      width: min(1040px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 72px 0 36px;
+    }
+
+    .hero-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f7fbfa 100%);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 42px 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .label {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.08);
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+
+    .lead-main {
+      margin: 0 0 14px;
+      font-size: clamp(18px, 2.8vw, 24px);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .lead-sub {
+      margin: 0;
+      max-width: 820px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid var(--line);
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #fafafa;
+    }
+
+    .note {
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    section {
+      padding: 18px 0 28px;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin: 0 0 14px;
+      letter-spacing: -0.01em;
+    }
+
+    .section-copy {
+      color: var(--muted);
+      margin: 0 0 20px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .recommend-list {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .recommend-list li {
+      margin-bottom: 10px;
+    }
+
+    .download-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f5f7f7 100%);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .store-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: #111827;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+      min-height: 54px;
+      transition: 0.2s ease;
+    }
+
+    .store-badge:hover {
+      background: #000000;
+    }
+
+    .store-badge.disabled {
+      background: #374151;
+      opacity: 0.9;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .store-badge small {
+      display: block;
+      font-size: 11px;
+      opacity: 0.85;
+      line-height: 1.1;
+      font-weight: 500;
+    }
+
+    .store-badge strong {
+      display: block;
+      font-size: 17px;
+      line-height: 1.1;
+      letter-spacing: 0.01em;
+    }
+
+    footer {
+      padding: 12px 0 56px;
+    }
+
+    .footer-box {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      margin-top: 12px;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (min-width: 768px) {
+      .hero-card {
+        padding: 56px 44px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <div class="hero-card">
+        <div class="label">Language Learning App</div>
+        <h1>ShotLingua</h1>
+        <p class="lead-main">韓国語・英語・日本語を、実際の生活や仕事の場面に合わせて学べる語学アプリ</p>
+        <p class="lead-sub">
+          ShotLingua は、韓国語・英語・日本語を、実際の生活や仕事の場面に合わせて学べる語学アプリです。
+          アルバイトで必要なマニュアルの内容を外国語で説明できるようになりたい人や、接客でお客さんにわかりやすく案内したい人の学習にも役立ちます。
+          留学中や海外で過ごしているときには、交通機関や街中の案内を写真で読み取り、その場面でよく使う語彙や表現を学ぶことができます。
+          お店やメニューの写真を撮れば、注文の仕方や接客で使える言い回しを学びながら、会話練習や音声コンテンツで実践的に身につけられます。
+        </p>
+
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#download">ダウンロード情報を見る</a>
+          <a class="btn btn-secondary" href="https://waytogo-ta.github.io/-shotlingua-site/" target="_blank" rel="noopener noreferrer">サポート</a>
+          <a class="btn btn-secondary" href="https://waytogo-ta.github.io/-shotlingua-site/privacy.html" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <h2>主な機能</h2>
+      <p class="section-copy">
+        学習のためだけの時間をつくるのではなく、生活・留学・仕事の場面とつなげながら続けやすく学べるように設計しています。
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>場面に合わせた語彙学習</h3>
+          <p>
+            交通機関、店内表示、メニュー、仕事のマニュアルなど、実際の場面に出てくる言葉を学びやすく設計しています。
+            その場で必要な語彙や表現を身につけたい人に向いています。
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>カメラ翻訳と写真からの学習</h3>
+          <p>
+            気になった表示や文章を写真で読み取り、そのまま意味の確認や学習につなげることができます。
+            留学中や海外滞在中にも、現地で出会った言葉をその場で理解しやすくなります。
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>会話練習と音声学習</h3>
+          <p>
+            注文の仕方や接客での案内、日常会話など、実際に使うことを意識しながら学べます。
+            音声コンテンツや会話練習を通して、覚えた表現を使える形に近づけていけます。
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>アルバイトや接客にも活かせる</h3>
+          <p>
+            お客さんへの説明や案内、よく使う接客表現、仕事で必要な内容の伝え方を学ぶサポートにも役立ちます。
+            勉強だけで終わらず、実際の仕事や生活で使うイメージを持ちながら続けられます。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>こんな人におすすめ</h2>
+      <div class="card">
+        <ul class="recommend-list">
+          <li>韓国語・英語・日本語を、実際の生活や仕事に役立つ形で学びたい人</li>
+          <li>留学や旅行、海外生活の中で、その場で必要な言葉を覚えたい人</li>
+          <li>メニューや案内表示、交通機関などを見ながら語彙を増やしたい人</li>
+          <li>アルバイトや接客で、お客さんへの説明に使える表現を身につけたい人</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="download">
+      <h2>ダウンロード</h2>
+      <div class="download-box">
+        <p class="section-copy" style="margin-top:0;">
+          App Store 公開後、このページからそのままダウンロードできるようになります。
+        </p>
+
+        <a class="store-badge disabled" href="#" aria-disabled="true">
+          <span aria-hidden="true"></span>
+          <span>
+            <small>Download on the</small>
+            <strong>App Store（公開準備中）</strong>
+          </span>
+        </a>
+
+        <p class="note">
+          リリース後は、このボタンから App Store のアプリページへ移動できるようになります。
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>ShotLinguaについて</h2>
+      <div class="card">
+        <p>
+          ShotLingua は、ただ単語を覚えるだけでなく、その場で必要な言葉を学んで使えるようになることを目指した語学アプリです。
+          今後も改善とアップデートを重ねながら、より実用的で続けやすい学習体験を届けていきます。
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-box">
+        <strong>リンク</strong>
+        <div class="footer-links">
+          <a href="https://waytogo-ta.github.io/-shotlingua-site/" target="_blank" rel="noopener noreferrer">サポート</a>
+          <a href="https://waytogo-ta.github.io/-shotlingua-site/terms.html" target="_blank" rel="noopener noreferrer">利用規約</a>
+          <a href="https://waytogo-ta.github.io/-shotlingua-site/privacy.html" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>
+        </div>
+        <p class="footer-note">
+          このページは ShotLingua の公式紹介ページです。内容は今後のアップデートに応じて変更される場合があります。
+        </p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
