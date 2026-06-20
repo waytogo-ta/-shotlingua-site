@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>ShotLingua で友達になろう</title>
+
+<!-- リンクプレビュー (Instagram/Messages/LINE 等で見出し・説明が出る) -->
+<meta property="og:title" content="ShotLingua で友達になろう 🌏" />
+<meta property="og:description" content="日本人や留学生と、翻訳チャットで言葉の壁なく話せるアプリ。リンクから友達追加できます。" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="ShotLingua" />
+<meta name="twitter:card" content="summary" />
+<meta name="apple-itunes-app" content="app-id=6760792510" />
+
+<style>
+  :root { --accent:#7C5CFC; --accent-dark:#5B3FE0; --ink:#1c1c1e; --sub:#6b6b70; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; padding:0; }
+  body {
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+    background:linear-gradient(160deg,#f6f4ff 0%,#ffffff 60%);
+    color:var(--ink); min-height:100vh;
+    display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .card {
+    width:100%; max-width:380px; text-align:center;
+    background:#fff; border-radius:24px; padding:32px 24px 28px;
+    box-shadow:0 12px 40px rgba(90,63,224,.12);
+  }
+  .badge {
+    width:84px; height:84px; border-radius:24px; margin:0 auto 18px;
+    background:linear-gradient(150deg,var(--accent),var(--accent-dark));
+    display:flex; align-items:center; justify-content:center; font-size:40px;
+  }
+  h1 { font-size:21px; line-height:1.4; margin:0 0 8px; }
+  .who { color:var(--accent); }
+  p.sub { font-size:14px; line-height:1.6; color:var(--sub); margin:0 0 24px; }
+  .btn {
+    display:block; width:100%; padding:15px; border-radius:14px; border:0;
+    font-size:16px; font-weight:700; cursor:pointer; text-decoration:none;
+    margin-bottom:12px; transition:transform .05s ease;
+  }
+  .btn:active { transform:scale(.98); }
+  .btn-primary { background:var(--accent); color:#fff; }
+  .btn-store { background:#000; color:#fff; }
+  .btn-ghost { background:#f1eefe; color:var(--accent); }
+  .hint { font-size:12px; color:var(--sub); margin-top:14px; line-height:1.6; }
+  .uname { font-family:ui-monospace,Menlo,monospace; color:var(--sub); font-size:13px; margin-top:-2px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">🌏</div>
+    <h1 id="title">ShotLingua で友達になろう！</h1>
+    <div class="uname" id="uname"></div>
+    <p class="sub">日本人や留学生と、翻訳チャットで言葉の壁なく話せるアプリ。<br />君の大学にいる人とも知り合えるかも 📱</p>
+
+    <a class="btn btn-primary" id="openApp" href="#">アプリで開く</a>
+    <a class="btn btn-store" id="store" href="https://apps.apple.com/app/id6760792510">App Store でダウンロード</a>
+    <a class="btn btn-ghost" id="openSafari" href="#" style="display:none">Safari で開く</a>
+
+    <div class="hint" id="hint"></div>
+  </div>
+
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var id = (params.get("id") || "").trim();
+  var uname = (params.get("u") || "").trim();
+  var name = (params.get("n") || "").trim();
+
+  // 見出しに送信者名を反映 (例: 「タコさんと ShotLingua で友達になろう！」)。
+  if (name) {
+    document.getElementById("title").innerHTML =
+      '<span class="who">' + escapeHtml(name) + 'さん</span>と ShotLingua で友達になろう！';
+  }
+  if (uname) document.getElementById("uname").textContent = "@" + uname;
+
+  // アプリを開くカスタムスキーム (既存アプリが受ける形式)。
+  var appURL = id ? ("shotlingua://add?id=" + encodeURIComponent(id)) : "shotlingua://";
+  var storeURL = "https://apps.apple.com/app/id6760792510";
+
+  document.getElementById("openApp").setAttribute("href", appURL);
+
+  // Instagram / Facebook の in-app ブラウザはカスタムスキーム遷移を抑制しがち。
+  // その場合は「Safari で開く」を促す (同じ https URL を外部ブラウザで開かせる)。
+  var ua = navigator.userAgent || "";
+  var inApp = /Instagram|FBAN|FBAV|Line\//i.test(ua);
+  var isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+  if (inApp) {
+    var safariBtn = document.getElementById("openSafari");
+    safariBtn.style.display = "block";
+    safariBtn.setAttribute("href", location.href);
+    safariBtn.addEventListener("click", function (e) {
+      // 多くの in-app ブラウザは target=_blank or x-safari- で外部に出せる。
+      e.preventDefault();
+      window.open(location.href, "_blank");
+    });
+    document.getElementById("hint").textContent =
+      "うまく開けない場合は、右上のメニューから「Safariで開く」を選んでください。";
+  }
+
+  // インストール済みなら自動でアプリを起動 (失敗時は App Store ボタンが残る)。
+  document.getElementById("openApp").addEventListener("click", tryOpenApp);
+  if (isIOS && !inApp && id) {
+    setTimeout(tryOpenApp, 350);
+  }
+
+  function tryOpenApp(e) {
+    if (e) e.preventDefault();
+    var start = Date.now();
+    // アプリ未インストールならスキーム遷移は無反応 → 一定時間後 App Store へ。
+    var t = setTimeout(function () {
+      if (Date.now() - start < 1600) location.href = storeURL;
+    }, 1200);
+    window.location.href = appURL;
+    window.addEventListener("pagehide", function () { clearTimeout(t); });
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, function (c) {
+      return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c];
+    });
+  }
+})();
+</script>
+</body>
+</html>
