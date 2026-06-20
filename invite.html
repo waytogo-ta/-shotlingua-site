@@ -10,7 +10,9 @@
 <meta property="og:description" content="日本人や留学生と、翻訳チャットで言葉の壁なく話せるアプリ。リンクから友達追加できます。" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="ShotLingua" />
+<meta property="og:image" content="https://waytogo-ta.github.io/-shotlingua-site/appicon.png" />
 <meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://waytogo-ta.github.io/-shotlingua-site/appicon.png" />
 <meta name="apple-itunes-app" content="app-id=6760792510" />
 
 <style>
@@ -29,9 +31,9 @@
     box-shadow:0 12px 40px rgba(90,63,224,.12);
   }
   .badge {
-    width:84px; height:84px; border-radius:24px; margin:0 auto 18px;
-    background:linear-gradient(150deg,var(--accent),var(--accent-dark));
-    display:flex; align-items:center; justify-content:center; font-size:40px;
+    width:88px; height:88px; border-radius:22px; margin:0 auto 18px;
+    display:block; object-fit:cover;
+    box-shadow:0 6px 18px rgba(90,63,224,.22);
   }
   h1 { font-size:21px; line-height:1.4; margin:0 0 8px; }
   .who { color:var(--accent); }
@@ -51,14 +53,13 @@
 </head>
 <body>
   <div class="card">
-    <div class="badge">🌏</div>
+    <img class="badge" src="appicon.png" alt="ShotLingua" />
     <h1 id="title">ShotLingua で友達になろう！</h1>
     <div class="uname" id="uname"></div>
     <p class="sub">日本人や留学生と、翻訳チャットで言葉の壁なく話せるアプリ。<br />君の大学にいる人とも知り合えるかも 📱</p>
 
     <a class="btn btn-primary" id="openApp" href="#">アプリで開く</a>
     <a class="btn btn-store" id="store" href="https://apps.apple.com/app/id6760792510">App Store でダウンロード</a>
-    <a class="btn btn-ghost" id="openSafari" href="#" style="display:none">Safari で開く</a>
 
     <div class="hint" id="hint"></div>
   </div>
@@ -90,16 +91,10 @@
   var isIOS = /iPhone|iPad|iPod/i.test(ua);
 
   if (inApp) {
-    var safariBtn = document.getElementById("openSafari");
-    safariBtn.style.display = "block";
-    safariBtn.setAttribute("href", location.href);
-    safariBtn.addEventListener("click", function (e) {
-      // 多くの in-app ブラウザは target=_blank or x-safari- で外部に出せる。
-      e.preventDefault();
-      window.open(location.href, "_blank");
-    });
+    // Instagram/LINE 等の in-app ブラウザはカスタムスキーム遷移を抑制しがち。
+    // その場合はブラウザ自身の「…」メニュー →「外部ブラウザで開く」を案内する。
     document.getElementById("hint").textContent =
-      "うまく開けない場合は、右上のメニューから「Safariで開く」を選んでください。";
+      "うまく開けない場合は、右上の「…」から「外部ブラウザで開く」を選んでください。";
   }
 
   // インストール済みなら自動でアプリを起動 (失敗時は App Store ボタンが残る)。
