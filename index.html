@@ -1,90 +1,556 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shotlingua サポート</title>
+  <title>ShotLingua（ショットリンガ) - いつもの会話が、そのまま語学になるSNS</title>
+
+  <!-- SEO: アプリ名で検索したとき公式サイトが出るためのタグ一式 -->
+  <meta name="description" content="ShotLingua（ショットリンガ)は、翻訳チャット・動画シェア・AI会話練習で、いつもの会話がそのまま語学になるSNS。相手は母国語、あなたは学習言語で。日本語・韓国語・英語対応、無料で始められます。">
+  <link rel="canonical" href="https://shotlingua.app/">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" href="appicon.png">
+  <link rel="apple-touch-icon" href="appicon.png">
+  <!-- Open Graph (SNS/LINEでシェアした時のプレビュー) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ShotLingua">
+  <meta property="og:title" content="ShotLingua（ショットリンガ) - いつもの会話が、そのまま語学になるSNS">
+  <meta property="og:description" content="翻訳チャット・動画シェア・AI会話練習。相手は母国語、あなたは学習言語で。日本語・韓国語・英語対応、無料で始められます。">
+  <meta property="og:url" content="https://shotlingua.app/">
+  <meta property="og:image" content="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/dc/29/85/dc298514-3420-2f2d-592f-9dd4ec5e6fe6/AppIcon-0-0-1x_U007epad-0-1-85-220.png/512x512bb.jpg">
+  <meta property="og:locale" content="ja_JP">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ShotLingua - いつもの会話が、そのまま語学になるSNS">
+  <meta name="twitter:description" content="翻訳チャット・動画シェア・AI会話練習。相手は母国語、あなたは学習言語で。">
+  <meta name="twitter:image" content="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/dc/29/85/dc298514-3420-2f2d-592f-9dd4ec5e6fe6/AppIcon-0-0-1x_U007epad-0-1-85-220.png/512x512bb.jpg">
+  <!-- 構造化データ: ブランド検索で「公式アプリサイト」として認識されやすくする -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MobileApplication",
+    "name": "ShotLingua",
+    "alternateName": "ショットリンガ",
+    "operatingSystem": "iOS",
+    "applicationCategory": "EducationApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "url": "https://shotlingua.app/",
+    "downloadUrl": "https://apps.apple.com/jp/app/id6760792510",
+    "image": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/dc/29/85/dc298514-3420-2f2d-592f-9dd4ec5e6fe6/AppIcon-0-0-1x_U007epad-0-1-85-220.png/512x512bb.jpg",
+    "description": "翻訳チャット・動画シェア・AI会話練習で、いつもの会話がそのまま語学になるSNS。"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&display=swap" rel="stylesheet">
+  
   <style>
+    /* === Design System & Variables === */
+    :root {
+      --primary: #8B5CF6;
+      --bg: #FFFFFF;
+      --surface: #FFFFFF;
+      --border: #EFEFEF;
+      --text-main: #000000;
+      --text-sub: #737373;
+      --radius-lg: 40px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 0;
-      padding: 24px;
-      line-height: 1.7;
-      background-color: #f7f7f7;
-      color: #222;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", "Noto Sans JP", sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
-    main {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 24px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+
+    a { text-decoration: none; color: inherit; }
+    button, input { font-family: inherit; border: none; outline: none; background: none; }
+    *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+    /* === Typography & Animation === */
+    h1, h2, h3 { font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; }
+    .section-title { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 24px; }
+    .section-sub { font-size: 1.125rem; color: var(--text-sub); margin: 0 auto 32px auto; max-width: 600px; }
+
+    .fade-up {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    h1 {
-      font-size: 1.6rem;
-      margin-top: 0;
-      margin-bottom: 0.75rem;
+    .fade-up.is-visible { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { transition: none; opacity: 1; transform: none; }
     }
-    p {
-      margin: 0.5rem 0;
+
+    /* === Centralized Stack Layout === */
+    .section { padding: 120px 0; border-bottom: 1px solid var(--border); }
+    .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .stack-layout { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 56px; width: 100%; }
+    .text-col { width: 100%; max-width: 800px; margin: 0 auto; }
+    
+    /* === Components === */
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 16px 36px; border-radius: 8px; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: opacity 0.2s; }
+    .btn-primary { background: var(--primary); color: #FFFFFF; }
+    .btn-primary:hover { opacity: 0.9; }
+
+    /* === Navigation === */
+    .nav { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid var(--border); }
+    .nav-container { display: flex; justify-content: space-between; align-items: center; height: 72px; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .logo-wrapper { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; }
+    .logo-wrapper img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; }
+    .logo-wrapper span { color: var(--primary); }
+
+    /* === Giant Phone Mockup === */
+    .phone-mockup {
+      width: 100%; max-width: 400px; aspect-ratio: 9 / 19.5; background: #F9F9F9; border-radius: var(--radius-lg); border: 14px solid #111;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.15); position: relative; overflow: hidden; display: flex; flex-direction: column; text-align: left; margin: 0 auto;
     }
-    h2 {
-      font-size: 1.2rem;
-      margin-top: 1.8rem;
-      margin-bottom: 0.4rem;
+    .phone-mockup::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 130px; height: 30px; background: #111; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; z-index: 50;
     }
-    a {
-      color: #0366d6;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    ul {
-      padding-left: 1.2rem;
-    }
-    small {
-      color: #666;
-      font-size: 0.85rem;
-    }
+    .mockup-content { flex: 1; overflow-y: auto; display: flex; flex-direction: column; position: relative; }
+
+    /* === App Header === */
+    .home-header { padding: 48px 16px 16px; display: flex; justify-content: space-between; align-items: center; background: white; }
+    .home-header-title { font-weight: 800; font-size: 1.2rem; }
+    .nav-icon { width: 28px; height: 28px; color: #111; display: flex; align-items: center; justify-content: center; }
+    .nav-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd; background: #E5E5E5; }
+
+    /* === Share Banner & Stories === */
+    .share-banner { margin: 0 16px 16px; padding: 12px; background: white; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .share-icon { width: 36px; height: 36px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .share-text { flex: 1; margin: 0 12px; line-height: 1.3; }
+    .share-text-main { font-weight: 800; font-size: 0.85rem; }
+    .share-text-sub { font-size: 0.75rem; color: var(--primary); font-weight: 700; }
+    .share-btn { background: var(--primary); color: white; padding: 8px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+
+    .story-tray { display: flex; gap: 12px; padding: 0 16px 16px; overflow-x: hidden; background: white; }
+    .story-item { width: 68px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .story-box { width: 68px; height: 90px; border-radius: 16px; background: #E5E5E5; position: relative; overflow: hidden; }
+    .story-box img { width: 100%; height: 100%; object-fit: cover; }
+    .story-box.active { border: 2px solid var(--primary); padding: 2px; }
+    .story-box.active img { border-radius: 12px; }
+    .story-plus { position: absolute; bottom: 4px; right: 4px; width: 20px; height: 20px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: 2px solid white; }
+    .story-label { font-size: 0.7rem; color: var(--text-sub); }
+
+    /* === Video Feed UI === */
+    .feed-container { flex: 1; position: relative; background: #000; border-radius: 24px 24px 0 0; overflow: hidden; min-height: 480px; }
+    .feed-media { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; background: #111; }
+    .feed-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 20%, transparent 60%, rgba(0,0,0,0.8) 100%); display: flex; flex-direction: column; justify-content: space-between; padding: 16px; color: white; pointer-events: none; }
+    .feed-user { display: flex; align-items: center; gap: 8px; margin-top: 8px; pointer-events: auto; }
+    .feed-user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid white; object-fit: cover; background: #E5E5E5; }
+    .feed-user-info { line-height: 1.2; }
+    .feed-user-name { font-weight: 800; font-size: 0.95rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+    .feed-user-meta { font-size: 0.8rem; opacity: 0.9; margin-top: 2px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+    .feed-actions { align-self: flex-end; display: flex; flex-direction: column; gap: 24px; align-items: center; margin-bottom: 24px; pointer-events: auto; }
+    .feed-action-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .feed-action-btn svg { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+
+    /* === Chat UI === */
+    .chat-header { padding: 48px 16px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; font-weight: 800; background: white; }
+    .chat-body { flex: 1; padding: 16px; background: #FFFFFF; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
+    .chat-bubble-wrap { display: flex; flex-direction: column; max-width: 85%; }
+    .chat-bubble-wrap.right { align-self: flex-end; align-items: flex-end; }
+    .bubble { padding: 14px 18px; border-radius: 20px; font-size: 1rem; line-height: 1.4; }
+    .bubble.left { background: #F1F5F9; color: black; border-bottom-left-radius: 4px; }
+    .bubble.right { background: var(--primary); color: white; border-bottom-right-radius: 4px; }
+    .translation-chip { font-size: 0.8rem; color: var(--text-sub); margin-top: 4px; }
+    
+    .demo-controls { background: #F9F9F9; padding: 24px; border-radius: 16px; border: 1px solid var(--border); width: 100%; max-width: 600px; margin: 0 auto; text-align: center; }
+    .lang-btn-group { display: flex; gap: 12px; justify-content: center; margin-top: 16px; margin-bottom: 16px; }
+    .lang-btn { padding: 10px 24px; border: 1px solid var(--border); border-radius: 30px; font-weight: 700; cursor: pointer; background: white; transition: 0.2s; font-size: 1rem; }
+    .lang-btn.active { background: var(--text-main); color: white; border-color: var(--text-main); }
+    .chat-input-bar { padding: 16px; background: white; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+    .chat-input { flex: 1; background: #F1F5F9; border-radius: 20px; padding: 12px 16px; font-size: 1rem; }
+    .chat-input:disabled { opacity: 0.6; }
+    .btn-send { background: var(--primary); color: white; border-radius: 20px; padding: 0 20px; font-weight: 700; cursor: pointer; }
+    .btn-send:disabled { background: var(--text-sub); cursor: not-allowed; }
+    .typing-dot { display: inline-block; width: 6px; height: 6px; background: var(--text-sub); border-radius: 50%; margin: 0 2px; animation: typing 1.4s infinite ease-in-out both; }
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+    /* === Meetup UI === */
+    .meetup-header { padding: 48px 16px 0; background: white; border-bottom: 1px solid var(--border); }
+    .meetup-tabs { display: flex; gap: 24px; margin-top: 16px; }
+    .tab { font-weight: 700; color: var(--text-sub); padding-bottom: 12px; cursor: pointer; font-size: 1.1rem; }
+    .tab.active { color: black; border-bottom: 2px solid black; }
+    
+    .swipe-card { flex: 1; margin: 16px; border-radius: 24px; overflow: hidden; position: relative; box-shadow: 0 8px 24px rgba(0,0,0,0.1); background: #000; }
+    .swipe-card video { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+    .swipe-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 32px 16px 80px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); color: white; pointer-events: none; }
+    .swipe-actions { position: absolute; bottom: 24px; left: 0; width: 100%; display: flex; justify-content: center; gap: 20px; z-index: 10; }
+    .circle-btn { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; border: 2px solid transparent; }
+    .btn-skip { background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); }
+    .btn-chat { background: var(--primary); }
+
+    /* === Footer CTA === */
+    .footer { padding: 80px 0; text-align: center; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--text-sub); }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Shotlingua サポートページ</h1>
-    <p>このページは、Shotlingua アプリに関するサポート情報を提供するための公式ページです。</p>
 
-    <h2>お問い合わせ</h2>
-    <p>
-      アプリの不具合、ご意見、ご要望などがある場合は、下記のメールアドレスまでご連絡ください。
-    </p>
-    <p>
-      ご連絡の際は、できるだけ詳しい状況（ご利用端末、OS バージョン、問題が起きた操作内容など）を記載いただけると、確認がスムーズになります。
-    </p>
-    <p>
-      <a href="mailto:shotlingua@gmail.com">shotlingua@gmail.com</a>
-    </p>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-container">
+      <div class="logo-wrapper">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/dc/29/85/dc298514-3420-2f2d-592f-9dd4ec5e6fe6/AppIcon-0-0-1x_U007epad-0-1-85-220.png/512x512bb.jpg" alt="ShotLingua">
+        <span>ShotLingua</span>
+      </div>
+      <a href="https://apps.apple.com/us/app/shotlingua-%E7%94%9F%E6%B4%BB%E3%81%9C%E3%82%93%E3%81%B6%E8%8B%B1%E8%AA%9E%E9%9F%93%E5%9B%BD%E8%AA%9E%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%82%A4%E3%83%9E%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3/id6760792510" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem;">App Store で入手</a>
+    </div>
+  </nav>
 
-    <h2>ご案内</h2>
-    <p>今後、必要に応じて以下の情報をこのサイトに追加・更新する場合があります。</p>
-    <ul>
-      <li>プライバシーポリシー</li>
-      <li>利用規約</li>
-      <li>アプリの更新情報</li>
-    </ul>
+  <!-- 1. Hero (Home) Section -->
+  <section class="section" style="padding-top: 140px;">
+    <div class="container stack-layout">
+      <div class="text-col fade-up">
+        <h1 class="section-title">いつものSNSの楽しさに、<br>言語が自然に乗る。</h1>
+        <p class="section-sub">
+          今いる友達を、練習したい言語の相手に変えよう。<br>
+          翻訳とAIが裏で支えるから、無理に相手に合わせなくても、毎日の会話がそのまま生きた語学練習になります。
+        </p>
+      </div>
+      
+      <div class="phone-mockup fade-up">
+        <div class="home-header">
+          <div class="nav-avatar"><img src="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/images/person-ko-man.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"></div>
+          <div class="home-header-title">Home</div>
+          <div class="nav-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          </div>
+        </div>
 
-    <h2>免責事項</h2>
-    <p>
-      本アプリおよび本ページに掲載している情報については、できる限り正確な内容を提供するよう努めていますが、その完全性・正確性を保証するものではありません。
-    </p>
-    <p>
-      本アプリの利用により発生したいかなる損害についても、開発者は責任を負いかねますので、あらかじめご了承ください。
-    </p>
+        <div class="mockup-content">
+          <div class="share-banner">
+            <div class="share-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </div>
+            <div class="share-text">
+              <div class="share-text-main">今をシェアする時間です</div>
+              <div class="share-text-sub">残り 59:46</div>
+            </div>
+            <div class="share-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+              カメラを開く
+            </div>
+          </div>
 
-    <p>
-      <small>最終更新日：2026年4月28日</small>
-    </p>
-  </main>
+          <div class="story-tray">
+            <div class="story-item">
+              <div class="story-box active">
+                <img src="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/images/person-ko-man.jpg">
+                <div class="story-plus">+</div>
+              </div>
+              <div class="story-label">ストーリー</div>
+            </div>
+            <div class="story-item">
+              <div class="story-box">
+                <img src="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/images/person-jp-woman.jpg">
+              </div>
+              <div class="story-label">yuna_kr</div>
+            </div>
+            <div class="story-item">
+              <div class="story-box">
+                <img src="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/images/person-en-woman.jpg">
+              </div>
+              <div class="story-label">jiwon_lee</div>
+            </div>
+            <div class="story-item">
+              <div class="story-box">
+                <img src="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/images/person-asia-woman.jpg">
+              </div>
+              <div class="story-label">sakura_jp</div>
+            </div>
+          </div>
+
+          <div class="feed-container">
+            <video src="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/videos/hero-loop.mp4" poster="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/images/video-poster.svg" autoplay muted loop playsinline class="feed-media"></video>
+            <div class="feed-overlay">
+              <div class="feed-top">
+                <div class="feed-user">
+                  <img src="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/images/person-jp-woman.jpg" class="feed-user-avatar">
+                  <div class="feed-user-info">
+                    <div class="feed-user-name">@yuna_kr</div>
+                    <div class="feed-user-meta">20:30 · 🇯🇵 → 🇰🇷</div>
+                  </div>
+                </div>
+              </div>
+              <div class="feed-actions">
+                <div class="feed-action-btn">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                  <span style="font-size:0.9rem; font-weight:700;">12</span>
+                </div>
+                <div class="feed-action-btn">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1.5 Timeline Section -->
+  <section class="section" style="background: #FAFAFA;">
+    <div class="container stack-layout">
+      <div class="text-col fade-up">
+        <h2 class="section-title">「勉強」ではなく、<br>「日常」になる。</h2>
+        <p class="section-sub">
+          写真や動画をシェアするいつもの体験。タイムラインの投稿もコメントも、自動であなたの学習言語に翻訳されて表示されます。<br>机に向かわなくても、友達の投稿を見る時間がそのまま語学の時間に変わります。
+        </p>
+      </div>
+      
+      <div class="phone-mockup fade-up">
+        <div class="home-header">
+          <div class="nav-avatar"><img src="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/images/person-ko-man.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"></div>
+          <div class="home-header-title">Home</div>
+          <div class="nav-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          </div>
+        </div>
+
+        <div class="mockup-content">
+          <div class="feed-container" style="border-radius: 0;">
+            <video src="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/videos/feed-demo.mp4" poster="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/images/video-poster.svg" autoplay muted loop playsinline class="feed-media"></video>
+            <div class="feed-overlay">
+              <div class="feed-top">
+                <div class="feed-user">
+                  <img src="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/images/person-en-woman.jpg" class="feed-user-avatar">
+                  <div class="feed-user-info">
+                    <div class="feed-user-name">@jiwon_lee</div>
+                    <div class="feed-user-meta">14:00 · 🇰🇷 → 🇯🇵</div>
+                  </div>
+                </div>
+              </div>
+              <div class="feed-actions">
+                <div class="feed-action-btn">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                  <span style="font-size:0.9rem; font-weight:700;">34</span>
+                </div>
+                <div class="feed-action-btn">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Chat Section -->
+  <section class="section" id="demo-section">
+    <div class="container stack-layout">
+      <div class="text-col fade-up">
+        <h2 class="section-title">相手に合わせず、<br>自分の言語のまま話せる。</h2>
+        <p class="section-sub">
+          あなたが練習したい言語を選ぶだけ。送信時は母語で打っても相手の言語に翻訳され、相手からの返信はあなたの選んだ言語で届きます。
+        </p>
+      </div>
+
+      <!-- Interactive Controls -->
+      <div class="demo-controls fade-up">
+        <h3 style="font-size: 1.2rem; margin-bottom: 8px;">練習したい言語を選んで、メッセージを送ってみましょう。</h3>
+        <div class="lang-btn-group">
+          <button class="lang-btn active" data-lang="en">英語</button>
+          <button class="lang-btn" data-lang="ko">韓国語</button>
+          <button class="lang-btn" data-lang="ja">日本語</button>
+        </div>
+      </div>
+
+      <div class="phone-mockup fade-up">
+        <div class="chat-header">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          <span>Yuna 🇰🇷</span>
+          <!-- 電話アイコンを削除してダミーの空スペースを追加 -->
+          <div style="width: 24px;"></div>
+        </div>
+        
+        <div class="mockup-content">
+          <div class="chat-body" id="demo-chat-window">
+            <div class="chat-bubble-wrap">
+              <div class="bubble left" id="initial-msg">What did you do in Shibuya today?</div>
+              <div class="translation-chip" id="initial-orig">原文 (韓国語): 오늘 시부야에서 뭐 했어?</div>
+            </div>
+          </div>
+          
+          <div class="chat-input-bar">
+            <input type="text" id="demo-input" class="chat-input" placeholder="日本語で入力...">
+            <button class="btn-send" id="demo-send">送信</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Meetup Section -->
+  <section class="section" style="background: #FAFAFA;">
+    <div class="container stack-layout">
+      <div class="text-col fade-up">
+        <h2 class="section-title">オンラインで終わらない、<br>リアルな繋がり。</h2>
+        <p class="section-sub">
+          「グループで会う」「個人と会う」など、目的別に言語交換のパートナーをすぐに見つけられます。
+        </p>
+      </div>
+
+      <div class="phone-mockup fade-up">
+        <div class="meetup-header">
+          <div style="font-weight: 800; font-size: 1.4rem;">交流</div>
+          <div class="meetup-tabs">
+            <div class="tab active">グループで会う</div>
+            <div class="tab">個人と会う</div>
+          </div>
+        </div>
+        
+        <div class="mockup-content" style="padding-bottom: 24px;">
+          <div class="swipe-card">
+            <video src="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/videos/connect-demo.mp4" poster="https://raw.githubusercontent.com/waytogo-ta/shotlingua-lp-assets/main/assets/images/video-poster.svg" autoplay muted loop playsinline></video>
+            <div class="swipe-info">
+              <h3 style="font-size: 1.8rem; margin-bottom: 8px;">Sakura</h3>
+              <div style="font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; color: #E5E5E5;">🇯🇵 母語: 日本語</div>
+              <p style="font-size: 1rem; line-height: 1.4;">法政大学で言語交換ができる留学生や友達になってくれる人を探しています！</p>
+            </div>
+            <div class="swipe-actions">
+              <div class="circle-btn btn-skip">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </div>
+              <div class="circle-btn btn-chat">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. CTA -->
+  <section class="section" style="border: none;">
+    <div class="container fade-up stack-layout" style="gap: 24px;">
+      <h2 class="section-title">今日から、会話で学ぼう。</h2>
+      <p class="section-sub" style="margin: 0 auto;">
+        特別な準備はいりません。いつものSNSの時間を、そのまま語学の時間に変えましょう。<br>まずは無料で体験してみてください。
+      </p>
+      <a href="https://apps.apple.com/us/app/shotlingua-%E7%94%9F%E6%B4%BB%E3%81%9C%E3%82%93%E3%81%B6%E8%8B%B1%E8%AA%9E%E9%9F%93%E5%9B%BD%E8%AA%9E%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%82%A4%E3%83%9E%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3/id6760792510" class="btn btn-primary" target="_blank">
+        App Store で入手
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div style="display: flex; gap: 32px; justify-content: center; margin-bottom: 24px;">
+        <a href="https://apps.apple.com/us/app/shotlingua-%E7%94%9F%E6%B4%BB%E3%81%9C%E3%82%93%E3%81%B6%E8%8B%B1%E8%AA%9E%E9%9F%93%E5%9B%BD%E8%AA%9E%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%82%A4%E3%83%9E%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3/id6760792510" target="_blank">App Store</a>
+        <a href="https://waytogo-ta.github.io/-shotlingua-site/terms.html" target="_blank">利用規約</a>
+        <a href="https://waytogo-ta.github.io/-shotlingua-site/privacy.html" target="_blank">プライバシーポリシー</a>
+        <a href="mailto:feedback@shotlingua.app">お問い合わせ</a>
+      </div>
+      <div>© 2026 ShotLingua</div>
+    </div>
+  </footer>
+
+  <script>
+    // --- Scroll Fade-up Animation ---
+    document.addEventListener("DOMContentLoaded", () => {
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    });
+
+    // --- Interactive Chat Demo Logic ---
+    const chatData = {
+      initial: {
+        en: { text: "What did you do in Shibuya today?", orig: "오늘 시부야에서 뭐 했어?" },
+        ko: { text: "오늘 시부야에서 뭐 했어?", orig: "오늘 시부야에서 뭐 했어?" },
+        ja: { text: "今日、渋谷で何してたの？", orig: "오늘 시부야에서 뭐 했어?" }
+      },
+      reply: {
+        en: { text: "That sounds nice! Show me a photo 😊", orig: "좋네요! 사진 보여줘 😊" },
+        ko: { text: "좋네요! 사진 보여줘 😊", orig: "좋네요! 사진 보여줘 😊" },
+        ja: { text: "いいね！写真見せて 😊", orig: "좋네요! 사진 보여줘 😊" }
+      }
+    };
+
+    let selectedLang = 'en';
+    let chatStep = 0; 
+    
+    const langBtns = document.querySelectorAll('.lang-btn');
+    const chatWindow = document.getElementById('demo-chat-window');
+    const chatInput = document.getElementById('demo-input');
+    const btnSend = document.getElementById('demo-send');
+
+    langBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        if(chatStep > 0) return; // 送信済なら変更不可
+        langBtns.forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        selectedLang = e.target.dataset.lang;
+        
+        document.getElementById('initial-msg').textContent = chatData.initial[selectedLang].text;
+        document.getElementById('initial-orig').textContent = "原文 (韓国語): " + chatData.initial[selectedLang].orig;
+      });
+    });
+
+    function executeChatFlow() {
+      const text = chatInput.value.trim();
+      if(!text || chatStep !== 0) return;
+      chatStep = 1; 
+      
+      chatWindow.innerHTML += `
+        <div class="chat-bubble-wrap right">
+          <div class="bubble right">${text}</div>
+        </div>
+      `;
+      chatInput.value = '';
+      chatInput.disabled = true;
+      btnSend.disabled = true;
+      chatInput.placeholder = "送信完了";
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      setTimeout(() => {
+        const typingId = 'typing-' + Date.now();
+        chatWindow.innerHTML += `
+          <div class="chat-bubble-wrap" id="${typingId}">
+            <div class="bubble left" style="padding: 14px 18px;">
+              <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+            </div>
+          </div>
+        `;
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        setTimeout(() => {
+          document.getElementById(typingId).remove();
+          chatWindow.innerHTML += `
+            <div class="chat-bubble-wrap">
+              <div class="bubble left">${chatData.reply[selectedLang].text}</div>
+              <div class="translation-chip">原文 (韓国語): ${chatData.reply[selectedLang].orig}</div>
+            </div>
+          `;
+          chatWindow.scrollTop = chatWindow.scrollHeight;
+
+          setTimeout(() => {
+            window.location.href = "https://apps.apple.com/us/app/shotlingua-%E7%94%9F%E6%B4%BB%E3%81%9C%E3%82%93%E3%81%B6%E8%8B%B1%E8%AA%9E%E9%9F%93%E5%9B%BD%E8%AA%9E%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%82%A4%E3%83%9E%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3/id6760792510";
+          }, 2000);
+
+        }, 2000);
+      }, 600);
+    }
+
+    btnSend.addEventListener('click', executeChatFlow);
+    chatInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') executeChatFlow(); });
+  </script>
 </body>
 </html>
