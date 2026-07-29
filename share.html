@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>ShotLingua の話題</title>
+
+<!-- リンクプレビュー (LINE/Messages 等)。静的ページのため内容は汎用 -->
+<meta property="og:title" content="ShotLingua で話題の相談 👀" />
+<meta property="og:description" content="匿名で相談・交流できるアプリ ShotLingua。続きはアプリで読めます。" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="ShotLingua" />
+<meta property="og:image" content="https://waytogo-ta.github.io/-shotlingua-site/appicon.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="apple-itunes-app" content="app-id=6760792510" />
+
+<style>
+  :root { --accent:#7C5CFC; --accent-dark:#5B3FE0; --ink:#1c1c1e; --sub:#6b6b70; --bg:#f6f4ff; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; padding:0; }
+  body {
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+    background:linear-gradient(160deg,#f6f4ff 0%,#ffffff 55%);
+    color:var(--ink); min-height:100vh; padding:20px 16px 28px;
+    display:flex; justify-content:center;
+  }
+  .wrap { width:100%; max-width:420px; }
+  .brand { display:flex; align-items:center; gap:9px; margin:2px 2px 14px; }
+  .brand img { width:30px; height:30px; border-radius:8px; }
+  .brand b { font-size:15px; }
+  .room {
+    display:inline-block; font-size:12.5px; font-weight:700; color:var(--accent);
+    background:#efeaff; padding:5px 11px; border-radius:999px; margin-bottom:12px;
+  }
+  .card {
+    background:#fff; border-radius:20px; padding:18px 18px 8px;
+    box-shadow:0 10px 34px rgba(90,63,224,.10);
+    position:relative; overflow:hidden;
+  }
+  .msg { display:flex; gap:10px; padding:10px 0; }
+  .ava {
+    flex:0 0 34px; width:34px; height:34px; border-radius:50%;
+    background:#e9e4fb; display:flex; align-items:center; justify-content:center;
+    font-size:15px; color:var(--accent);
+  }
+  .msg .body { flex:1; min-width:0; }
+  .lbl { font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:3px; }
+  .lbl .op { color:var(--accent); font-weight:700; margin-left:6px; font-size:11px; }
+  .txt { font-size:14.5px; line-height:1.65; white-space:pre-wrap; word-break:break-word; }
+  .media { margin-top:8px; font-size:12px; color:var(--sub); }
+  .media img { max-width:100%; border-radius:12px; display:block; }
+  .divider { height:1px; background:#eee; margin:2px 0; }
+  /* 続きを隠すフェード */
+  .fade {
+    position:relative; height:96px; margin-top:-70px;
+    background:linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 78%);
+    pointer-events:none;
+  }
+  .gate { text-align:center; margin-top:14px; }
+  .more { font-size:13px; color:var(--sub); margin-bottom:10px; }
+  .btn {
+    display:block; width:100%; padding:15px; border-radius:14px; border:0;
+    font-size:16px; font-weight:700; cursor:pointer; text-decoration:none;
+    margin-bottom:10px; transition:transform .05s ease;
+  }
+  .btn:active { transform:scale(.98); }
+  .btn-primary { background:var(--accent); color:#fff; }
+  .btn-store { background:#000; color:#fff; }
+  .hint { font-size:12px; color:var(--sub); text-align:center; margin-top:12px; line-height:1.6; }
+  .state { text-align:center; color:var(--sub); font-size:14px; padding:40px 0; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand"><img src="appicon.png" alt="" /><b>ShotLingua</b></div>
+    <div id="content"><div class="state">読み込み中…</div></div>
+  </div>
+
+<script>
+(function () {
+  var API_KEY = "AIzaSyAodG25aOXTOfwsn0X1RsgHliJ7u0TOhBo"; // Firebase web key (公開情報)
+  var PROJECT = "shotlingua-12";
+  var STORE_URL = "https://apps.apple.com/app/id6760792510";
+
+  var id = (new URLSearchParams(location.search).get("id") || "").trim();
+  var content = document.getElementById("content");
+
+  if (!id) { content.innerHTML = '<div class="state">リンクが正しくありません。</div>'; return; }
+
+  var url = "https://firestore.googleapis.com/v1/projects/" + PROJECT +
+            "/databases/(default)/documents/shares/" + encodeURIComponent(id) + "?key=" + API_KEY;
+
+  fetch(url).then(function (r) {
+    if (!r.ok) throw new Error("not found");
+    return r.json();
+  }).then(function (doc) {
+    render(unwrap({ mapValue: { fields: doc.fields } }));
+  }).catch(function () {
+    content.innerHTML = '<div class="state">この投稿は見つかりませんでした。<br>アプリで探してみてください。</div>' +
+      '<a class="btn btn-store" href="' + STORE_URL + '">App Store でひらく</a>';
+  });
+
+  // Firestore REST の型付き値を素の JS 値へ。
+  function unwrap(v) {
+    if (v == null) return null;
+    if ("stringValue" in v) return v.stringValue;
+    if ("integerValue" in v) return parseInt(v.integerValue, 10);
+    if ("doubleValue" in v) return v.doubleValue;
+    if ("booleanValue" in v) return v.booleanValue;
+    if ("arrayValue" in v) return (v.arrayValue.values || []).map(unwrap);
+    if ("mapValue" in v) {
+      var o = {}, f = v.mapValue.fields || {};
+      for (var k in f) o[k] = unwrap(f[k]);
+      return o;
+    }
+    return null;
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c];
+    });
+  }
+
+  function msgHTML(label, text, isOP, imageURL, hasMedia) {
+    var media = "";
+    if (imageURL) media = '<div class="media"><img src="' + esc(imageURL) + '" alt="" loading="lazy" /></div>';
+    else if (hasMedia) media = '<div class="media">📷 写真・動画つき</div>';
+    return '<div class="msg">' +
+      '<div class="ava">🙂</div>' +
+      '<div class="body">' +
+        '<div class="lbl">' + esc(label) + (isOP ? '<span class="op">質問者</span>' : '') + '</div>' +
+        (text ? '<div class="txt">' + esc(text) + '</div>' : '') +
+        media +
+      '</div></div>';
+  }
+
+  function render(d) {
+    var op = d.op || {};
+    var comments = d.comments || [];
+    var shown = comments.length;
+    var total = d.totalComments || 0;
+    var remaining = Math.max(0, total - shown);
+
+    var html = "";
+    if (d.roomName) html += '<div class="room"># ' + esc(d.roomName) + '</div>';
+    html += '<div class="card">';
+    html += msgHTML(op.label || "匿名", op.text, true, op.imageURL, false);
+    if (comments.length) html += '<div class="divider"></div>';
+    comments.forEach(function (c, i) {
+      html += msgHTML(c.label || "匿名", c.text, false, null, c.hasMedia);
+      if (i < comments.length - 1) html += '<div class="divider"></div>';
+    });
+    html += '<div class="fade"></div>';
+    html += '</div>'; // card
+
+    var moreText = remaining > 0
+      ? ("このあと " + remaining + " 件の返信があります")
+      : "続きや返信はアプリで読めます";
+    html += '<div class="gate">' +
+      '<div class="more">' + moreText + ' 🔒</div>' +
+      '<a class="btn btn-primary" id="openApp" href="#">アプリで続きを見る</a>' +
+      '<a class="btn btn-store" href="' + STORE_URL + '">App Store でダウンロード</a>' +
+      '<div class="hint" id="hint">匿名で相談・交流できるアプリです。</div>' +
+    '</div>';
+
+    content.innerHTML = html;
+    wireOpen(d.deepLink || "shotlingua://");
+  }
+
+  function wireOpen(appURL) {
+    var ua = navigator.userAgent || "";
+    var inApp = /Instagram|FBAN|FBAV|Line\//i.test(ua);
+    var open = document.getElementById("openApp");
+    if (!open) return;
+    if (inApp) {
+      document.getElementById("hint").textContent =
+        "うまく開けない時は、右上の「…」から「外部ブラウザで開く」を選んでください。";
+    }
+    open.addEventListener("click", function (e) {
+      e.preventDefault();
+      var start = Date.now();
+      var t = setTimeout(function () {
+        if (Date.now() - start < 1600) location.href = STORE_URL;
+      }, 1200);
+      window.location.href = appURL;
+      window.addEventListener("pagehide", function () { clearTimeout(t); });
+    });
+  }
+})();
+</script>
+</body>
+</html>
