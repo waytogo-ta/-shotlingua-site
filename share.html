@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>ShotLingua の話題</title>
 
-<!-- リンクプレビュー (LINE/Messages 等)。静的ページのため内容は汎用 -->
 <meta property="og:title" content="ShotLingua で話題の相談 👀" />
 <meta property="og:description" content="匿名で相談・交流できるアプリ ShotLingua。続きはアプリで読めます。" />
 <meta property="og:type" content="website" />
@@ -15,195 +14,248 @@
 <meta name="apple-itunes-app" content="app-id=6760792510" />
 
 <style>
-  :root { --accent:#6C4DF5; --accent2:#7C5CFC; --ink:#1c1c1e; --sub:#8a8a90; --line:#eeeef2; }
-  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html,body { margin:0; padding:0; }
-  body {
-    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
-    background:#fff; color:var(--ink); min-height:100vh;
+  :root{
+    --purple:#6C4DF5; --purple-d:#5539DC; --purple-soft:#F1EDFE;
+    --ink:#24202F; --head:#14121C; --sub:#9B96AD; --faint:#B9B5C6;
+    --line:#F0EEF5; --chip:#EBE8F3; --bg:#FFFFFF;
+    --scrim:linear-gradient(to top, rgba(10,8,20,.62), rgba(10,8,20,0) 62%);
+    --cta-shadow:0 8px 20px rgba(108,77,245,.32);
+    --pill-shadow:0 4px 14px rgba(20,18,28,.12);
+    --card:#FFFFFF; --fade:#ffffff;
   }
-  .wrap { width:100%; max-width:460px; margin:0 auto; }
-
-  /* 上部ブランドバー (本物のアプリアイコン) */
-  .brand { display:flex; align-items:center; gap:9px; padding:14px 18px 10px; }
-  .brand img { width:30px; height:30px; border-radius:23%; box-shadow:0 2px 6px rgba(90,63,224,.18); }
-  .brand b { font-size:16px; letter-spacing:.2px; }
-
-  /* ルームのカバー(ヒーロー)。アプリのルーム詳細と同じ見せ方 */
-  .hero {
-    position:relative; height:210px; background:linear-gradient(135deg,#7C5CFC,#5B3FE0);
-    background-size:cover; background-position:center; overflow:hidden;
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0E0C16; --card:#17141F; --ink:#EDEAF6; --head:#EDEAF6;
+      --sub:rgba(255,255,255,.5); --faint:rgba(255,255,255,.38);
+      --line:rgba(255,255,255,.08); --chip:rgba(255,255,255,.14); --fade:#0E0C16; }
   }
-  .hero::after {
-    content:""; position:absolute; inset:0;
-    background:linear-gradient(to top, rgba(0,0,0,.62) 0%, rgba(0,0,0,.12) 45%, rgba(0,0,0,0) 70%);
-  }
-  .hero .meta { position:absolute; left:18px; right:18px; bottom:14px; z-index:2; color:#fff; }
-  .hero .rname { font-size:26px; font-weight:800; line-height:1.2; margin:0 0 4px; text-shadow:0 1px 6px rgba(0,0,0,.35); }
-  .hero .rsub { font-size:13px; opacity:.95; text-shadow:0 1px 4px rgba(0,0,0,.4); }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; padding:0; }
+  body{ font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif;
+    background:var(--bg); color:var(--ink); }
+  .wrap{ width:100%; max-width:430px; margin:0 auto; padding-bottom:150px; }
 
-  .list { padding:6px 18px 0; }
-  .msg { display:flex; gap:11px; padding:13px 0; }
-  .ava { flex:0 0 36px; width:36px; height:36px; border-radius:50%; background:#eceaf6;
-         display:flex; align-items:center; justify-content:center; }
-  .ava svg { width:20px; height:20px; fill:#b7b1d6; }
-  .msg .body { flex:1; min-width:0; }
-  .lbl { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
-  .lbl .name { font-size:13px; font-weight:700; color:var(--ink); }
-  .lbl .op { font-size:11px; font-weight:700; color:var(--accent); }
-  .lbl .time { font-size:10px; color:#b4b4bc; }
-  .txt { font-size:15px; line-height:1.65; white-space:pre-wrap; word-break:break-word; color:#26262b; }
-  .media { margin-top:8px; font-size:12.5px; color:var(--sub); }
-  .media img { max-width:100%; border-radius:14px; display:block; margin-top:4px; }
-  .divider { height:1px; background:var(--line); }
+  /* header 44px */
+  .hd{ height:44px; display:flex; align-items:center; gap:8px; padding:0 16px; }
+  .hd img{ width:22px; height:22px; border-radius:24%; }
+  .hd b{ font-size:15px; color:var(--head); }
+  .hd .dom{ margin-left:auto; font-size:12px; color:var(--sub); }
 
-  /* 続きを隠すフェード */
-  .fade { position:relative; height:120px; margin-top:-96px; pointer-events:none;
-          background:linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 80%); }
+  /* cover (room) */
+  .cover{ position:relative; height:168px; width:100%; overflow:hidden;
+    background:linear-gradient(135deg,#CFC6F0,#A9B8E8 60%,#9ED8D3); background-size:cover; background-position:center; }
+  .cover::after{ content:""; position:absolute; inset:0; background:var(--scrim); }
+  .cover .meta{ position:absolute; left:16px; bottom:14px; z-index:2; display:flex; flex-direction:column; gap:7px; }
+  .chiprow{ display:flex; gap:6px; align-items:center; }
+  .rchip{ background:rgba(255,255,255,.94); color:#14121C; font-size:11px; font-weight:800; padding:4px 9px; border-radius:999px; }
+  .hot{ background:var(--purple); color:#fff; font-size:11px; font-weight:800; padding:4px 9px; border-radius:999px; }
+  .ctitle{ font-size:20px; font-weight:800; color:#fff; text-shadow:0 1px 6px rgba(0,0,0,.35); }
 
-  /* みんなの投稿カード */
-  .postwrap { padding:6px 18px 0; }
-  .post { border:1px solid var(--line); border-radius:18px; padding:14px; }
-  .phead { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-  .phead .pname { font-size:14px; font-weight:700; }
-  .ptext { font-size:15.5px; line-height:1.7; white-space:pre-wrap; word-break:break-word; margin-bottom:10px; }
-  .pimg { width:100%; border-radius:14px; display:block; }
+  /* 賑わい行 */
+  .buzz{ display:flex; align-items:center; gap:10px; }
+  .avstack{ display:flex; }
+  .avstack .d{ width:26px; height:26px; border-radius:50%; margin-left:-9px; border:2px solid var(--bg); }
+  .avstack .d:first-child{ margin-left:0; }
+  .plus{ width:26px; height:26px; border-radius:50%; margin-left:-9px; border:2px solid var(--bg);
+    background:#EDEAF6; color:var(--purple); font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .buzz .t{ font-size:13px; font-weight:700; color:var(--ink); }
 
-  .gate { padding:16px 18px 26px; text-align:center; }
-  .more { font-size:13.5px; color:var(--sub); margin-bottom:12px; }
-  .btn { display:block; width:100%; padding:16px; border-radius:15px; border:0;
-         font-size:16px; font-weight:700; cursor:pointer; text-decoration:none;
-         margin-bottom:11px; transition:transform .05s ease; }
-  .btn:active { transform:scale(.985); }
-  .btn-primary { background:var(--accent); color:#fff; box-shadow:0 6px 18px rgba(108,77,245,.28); }
-  .btn-store { background:#000; color:#fff; }
-  .hint { font-size:12px; color:var(--sub); margin-top:10px; line-height:1.6; }
-  .state { text-align:center; color:var(--sub); font-size:14px; padding:60px 24px; }
+  /* messages */
+  .msgs{ padding:2px 16px 0; }
+  .msg{ display:flex; gap:11px; padding:9px 0; }
+  .av{ flex:0 0 32px; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:13px; font-weight:800; }
+  .msg .bd{ flex:1; min-width:0; }
+  .nm{ display:flex; align-items:center; gap:6px; margin-bottom:3px; flex-wrap:wrap; }
+  .nm .n{ font-size:13px; font-weight:700; color:var(--head); }
+  .nm .op{ font-size:10px; font-weight:800; color:var(--purple); background:var(--purple-soft); padding:1px 6px; border-radius:5px; }
+  .nm .tm{ font-size:11px; color:var(--sub); }
+  .tx{ font-size:15px; line-height:1.55; color:var(--ink); white-space:pre-wrap; word-break:break-word; text-wrap:pretty; }
+  .media{ margin-top:6px; font-size:12px; color:var(--sub); }
+
+  /* post */
+  .pauthor{ display:flex; align-items:center; gap:11px; padding:0 16px; }
+  .pauthor .av40{ width:40px; height:40px; border-radius:50%; background:#EDEAF6; display:flex; align-items:center; justify-content:center; }
+  .pauthor .av40 svg{ width:22px; height:22px; fill:#b7b1d6; }
+  .pname{ font-size:15px; font-weight:800; color:var(--head); }
+  .pmeta{ font-size:12px; color:var(--sub); display:flex; align-items:center; gap:6px; margin-top:1px; }
+  .langbadge{ background:var(--purple-soft); color:var(--purple); font-size:11px; font-weight:800; padding:1px 7px; border-radius:5px; }
+  .ptext{ font-size:16px; line-height:1.6; color:var(--ink); padding:12px 16px 0; white-space:pre-wrap; word-break:break-word; }
+  .pimg{ width:calc(100% - 32px); height:206px; object-fit:cover; border-radius:14px; margin:12px 16px 0; display:block; }
+  .rx{ display:flex; gap:8px; padding:12px 16px 0; flex-wrap:wrap; }
+  .rx .p{ border:1px solid var(--chip); border-radius:999px; padding:5px 11px; font-size:13px; font-weight:700; color:var(--ink); }
+  .chead{ font-size:13px; font-weight:800; color:var(--sub); padding:14px 16px 2px; }
+
+  /* cutoff (no lock) */
+  .cut{ position:relative; margin-top:6px; overflow:hidden; }
+  .cut .sk{ padding:10px 16px 0; filter:blur(4.5px); opacity:.5; }
+  .cut .skrow{ display:flex; gap:11px; padding:9px 0; align-items:flex-start; }
+  .cut .skav{ width:32px; height:32px; border-radius:50%; background:#3A3550; flex:0 0 32px; }
+  .cut .skbars{ flex:1; }
+  .cut .bar{ height:9px; border-radius:6px; margin-bottom:6px; background:#3A3550; }
+  .cut .bar.nm{ width:34%; background:#2A2636; height:8px; }
+  .cut .fade{ position:absolute; inset:0; background:linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,.86) 55%, var(--fade)); }
+  @media (prefers-color-scheme: dark){ .cut .fade{ background:linear-gradient(to bottom, rgba(14,12,22,0), rgba(14,12,22,.86) 55%, var(--fade)); } }
+  .cut .pill{ position:absolute; left:50%; bottom:8px; transform:translateX(-50%); z-index:2;
+    background:var(--card); box-shadow:var(--pill-shadow); border-radius:999px; padding:7px 15px; font-size:13px; font-weight:700; color:var(--head); white-space:nowrap; }
+
+  .empty{ text-align:center; color:var(--sub); font-size:14px; padding:26px 24px 8px; line-height:1.6; }
+
+  /* fixed CTA */
+  .cta{ position:fixed; left:0; right:0; bottom:0; z-index:10; background:var(--bg);
+    padding:12px 16px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); }
+  .cta .wrapin{ max-width:430px; margin:0 auto; }
+  .cta a.main{ display:block; height:54px; line-height:54px; text-align:center; border-radius:16px;
+    background:var(--purple); color:#fff; font-size:17px; font-weight:800; text-decoration:none; box-shadow:var(--cta-shadow); }
+  .cta a.main:active{ background:var(--purple-d); }
+  .cta .store{ text-align:center; font-size:13px; color:var(--sub); margin-top:10px; }
+  .cta .store a{ color:var(--purple); text-decoration:underline; font-weight:700; }
+  .cta .tag{ text-align:center; font-size:11px; color:var(--faint); margin-top:5px; }
+  .cta .lineNote{ text-align:center; font-size:11px; color:var(--faint); margin-top:6px; display:none; }
+
+  .state{ text-align:center; color:var(--sub); font-size:14px; padding:60px 24px; }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="brand"><img src="appicon.png" alt="" /><b>ShotLingua</b></div>
+    <div class="hd"><img src="appicon.png" alt="" /><b>ShotLingua</b><span class="dom">shotlingua.app</span></div>
     <div id="content"><div class="state">読み込み中…</div></div>
+  </div>
+  <div class="cta" id="cta" style="display:none">
+    <div class="wrapin">
+      <a class="main" id="openApp" href="#">アプリで続きを見る</a>
+      <div class="store">アプリが無い方は <a href="https://apps.apple.com/app/id6760792510">App Storeへ</a></div>
+      <div class="tag">母語で打って、学習言語で読む翻訳SNS</div>
+      <div class="lineNote" id="lineNote">うまく開けない時は、右上の「…」から「外部ブラウザで開く」を選んでください。</div>
+    </div>
   </div>
 
 <script>
-(function () {
-  var API_KEY = "AIzaSyAodG25aOXTOfwsn0X1RsgHliJ7u0TOhBo"; // Firebase web key (公開情報)
-  var PROJECT = "shotlingua-12";
-  var STORE_URL = "https://apps.apple.com/app/id6760792510";
-  var PERSON = '<svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5 0-9 2.5-9 6v2h18v-2c0-3.5-4-6-9-6z"/></svg>';
+(function(){
+  var API_KEY="AIzaSyAodG25aOXTOfwsn0X1RsgHliJ7u0TOhBo", PROJECT="shotlingua-12";
+  var STORE="https://apps.apple.com/app/id6760792510";
+  var PALETTE=["#F0A6B6","#8CC5E8","#C3B4F0","#F5D08A","#9BDCC6"];
+  var FLAGS={ja:"🇯🇵",ko:"🇰🇷",en:"🇺🇸",zh:"🇨🇳"};
+  var PERSON='<svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5 0-9 2.5-9 6v2h18v-2c0-3.5-4-6-9-6z"/></svg>';
+  var content=document.getElementById("content");
+  var id=(new URLSearchParams(location.search).get("id")||"").trim();
+  if(!id){ content.innerHTML='<div class="state">リンクが正しくありません。</div>'; return; }
 
-  var id = (new URLSearchParams(location.search).get("id") || "").trim();
-  var content = document.getElementById("content");
-  if (!id) { content.innerHTML = '<div class="state">リンクが正しくありません。</div>'; return; }
+  fetch("https://firestore.googleapis.com/v1/projects/"+PROJECT+"/databases/(default)/documents/shares/"+encodeURIComponent(id)+"?key="+API_KEY)
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(doc){ render(unwrap({mapValue:{fields:doc.fields}})); })
+    .catch(function(){
+      content.innerHTML='<div class="state">この投稿は見つかりませんでした。<br>アプリで探してみてください。</div>';
+      showCTA("shotlingua://");
+    });
 
-  var url = "https://firestore.googleapis.com/v1/projects/" + PROJECT +
-            "/databases/(default)/documents/shares/" + encodeURIComponent(id) + "?key=" + API_KEY;
-
-  fetch(url).then(function (r) {
-    if (!r.ok) throw new Error("not found");
-    return r.json();
-  }).then(function (doc) {
-    render(unwrap({ mapValue: { fields: doc.fields } }));
-  }).catch(function () {
-    content.innerHTML = '<div class="state">この投稿は見つかりませんでした。<br>アプリで探してみてください。</div>' +
-      '<div class="gate"><a class="btn btn-store" href="' + STORE_URL + '">App Store でひらく</a></div>';
-  });
-
-  function unwrap(v) {
-    if (v == null) return null;
-    if ("stringValue" in v) return v.stringValue;
-    if ("integerValue" in v) return parseInt(v.integerValue, 10);
-    if ("doubleValue" in v) return v.doubleValue;
-    if ("booleanValue" in v) return v.booleanValue;
-    if ("arrayValue" in v) return (v.arrayValue.values || []).map(unwrap);
-    if ("mapValue" in v) { var o={}, f=v.mapValue.fields||{}; for (var k in f) o[k]=unwrap(f[k]); return o; }
+  function unwrap(v){
+    if(v==null) return null;
+    if("stringValue" in v) return v.stringValue;
+    if("integerValue" in v) return parseInt(v.integerValue,10);
+    if("doubleValue" in v) return v.doubleValue;
+    if("booleanValue" in v) return v.booleanValue;
+    if("arrayValue" in v) return (v.arrayValue.values||[]).map(unwrap);
+    if("mapValue" in v){ var o={},f=v.mapValue.fields||{}; for(var k in f) o[k]=unwrap(f[k]); return o; }
     return null;
   }
-  function esc(s) {
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
-      return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c];
-    });
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+  function hue(s){ var h=0; s=String(s||""); for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return PALETTE[h%PALETTE.length]; }
+  function ago(ms){ if(!ms) return ""; var s=(Date.now()-ms)/1000;
+    if(s<60) return "たった今"; if(s<3600) return Math.floor(s/60)+"分前";
+    if(s<86400) return Math.floor(s/3600)+"時間前"; if(s<604800) return Math.floor(s/86400)+"日前";
+    return Math.floor(s/604800)+"週間前"; }
+
+  // 賑わい行の重ねアバター(ハッシュ色のダミー円)。
+  function avstack(n, size){
+    n=Math.max(0,n); var show=Math.min(4,n), h='<div class="avstack">';
+    for(var i=0;i<show;i++) h+='<div class="d" style="width:'+size+'px;height:'+size+'px;margin-left:'+(i?-9:0)+'px;background:'+PALETTE[i%PALETTE.length]+'"></div>';
+    if(n>4) h+='<span class="plus" style="width:'+size+'px;height:'+size+'px">+'+(n-4)+'</span>';
+    return h+'</div>';
+  }
+  function cutoff(remaining, unit, h){
+    if(remaining<=0) return "";
+    return '<div class="cut" style="height:'+h+'px">'+
+      '<div class="sk">'+skRow()+skRow()+'</div>'+
+      '<div class="fade"></div>'+
+      '<div class="pill">この先に '+remaining+'件 の'+unit+'</div></div>';
+  }
+  function skRow(){ return '<div class="skrow"><div class="skav"></div><div class="skbars">'+
+    '<div class="bar nm"></div><div class="bar" style="width:'+(70+Math.round(20*Math.random()))+'%"></div>'+
+    '<div class="bar" style="width:'+(40+Math.round(30*Math.random()))+'%"></div></div></div>'; }
+
+  function msgHTML(m){
+    var media = m.hasMedia ? '<div class="media">📷 写真・動画つき</div>' : "";
+    return '<div class="msg"><div class="av" style="background:'+hue(m.label)+'">'+esc((m.label||"？").replace(/[^0-9]/g,"")||"匿").slice(-2)+'</div>'+
+      '<div class="bd"><div class="nm"><span class="n">'+esc(m.label||"匿名")+'</span>'+
+      (m.op?'<span class="op">質問者</span>':'')+ (m.timeMs?'<span class="tm">'+ago(m.timeMs)+'</span>':'') +'</div>'+
+      (m.text?'<div class="tx">'+esc(m.text)+'</div>':'')+media+'</div></div>';
   }
 
-  function msgHTML(label, text, isOP, imageURL, hasMedia) {
-    var media = "";
-    if (imageURL) media = '<div class="media"><img src="' + esc(imageURL) + '" alt="" loading="lazy" /></div>';
-    else if (hasMedia) media = '<div class="media">📷 写真・動画つき</div>';
-    return '<div class="msg">' +
-      '<div class="ava">' + PERSON + '</div>' +
-      '<div class="body">' +
-        '<div class="lbl"><span class="name">' + esc(label) + '</span>' +
-          (isOP ? '<span class="op">質問者</span>' : '') + '</div>' +
-        (text ? '<div class="txt">' + esc(text) + '</div>' : '') + media +
-      '</div></div>';
+  function render(d){ if(d.type==="post"){ renderPost(d); } else { renderRoom(d); } }
+
+  function renderRoom(d){
+    var msgs=d.messages||[], people=d.peopleCount||0, total=d.totalComments||0;
+    var replies=Math.max(0, msgs.length-1);       // OP を除いた表示コメント数
+    var remaining=Math.max(0, total - replies);
+    var hot = total>=5;
+
+    var cover='<div class="cover"'+(d.roomImageURL?' style="background-image:'+"url('"+esc(d.roomImageURL)+"')"+'"':'')+'>'+
+      '<div class="meta"><div class="chiprow"><span class="rchip"># '+esc(d.roomName||"相談")+'</span>'+
+      (hot?'<span class="hot">🔥 話題</span>':'')+'</div></div></div>';
+
+    var buzz = people>1 ? '<div class="buzz" style="padding:14px 16px 12px">'+avstack(people,26)+
+      '<span class="t">'+people+'人が話している'+(people>3?' 🔥':'')+'</span></div>' : '<div style="height:8px"></div>';
+
+    var body='<div class="msgs">'; msgs.forEach(function(m){ body+=msgHTML(m); }); body+='</div>';
+
+    var tail;
+    if(replies===0 && total===0){
+      tail='<div class="empty">まだ会話がありません。<br>最初の一言をアプリで。</div>';
+    } else {
+      tail=cutoff(remaining,"返信",112);
+    }
+    content.innerHTML=cover+buzz+body+tail;
+    showCTA(d.deepLink||"shotlingua://");
   }
 
-  function render(d) {
-    if (d.type === "post") { renderPost(d); return; }
-    var op = d.op || {}, comments = d.comments || [];
-    var total = d.totalComments || 0;
-    var remaining = Math.max(0, total - comments.length);
+  function renderPost(d){
+    // みんなの投稿は公開コンテンツ → モザイク(ブラー途切れ)なしで丸ごと見せる。
+    var rc=d.reactionCount||0, reactions=d.reactions||[], comments=d.comments||[];
+    var cc=d.commentCount||0;
+    var flag=FLAGS[d.origLang]||"";
 
-    // ヒーロー (カバー画像 or 紫グラデ) + ルーム名 + 参加人数/匿名可
-    var hero = '<div class="hero"' +
-      (d.roomImageURL ? ' style="background-image:linear-gradient(rgba(0,0,0,.05),rgba(0,0,0,.05)),url(\'' + esc(d.roomImageURL) + '\')"' : '') +
-      '><div class="meta">' +
-        '<div class="rname">' + esc(d.roomName || "相談") + '</div>' +
-        '<div class="rsub">' + (d.memberCount ? (d.memberCount + "人が参加中") : "交流ルーム") +
-          (d.allowAnonymous === false ? "" : " ・ 匿名で書けます") + '</div>' +
-      '</div></div>';
+    var buzz = rc>0 ? '<div class="buzz" style="padding:16px 16px 0">'+avstack(rc,24)+
+      '<span class="t">'+rc+'人がリアクションした'+(rc>3?' 🔥':'')+'</span></div>' : '';
 
-    var body = '<div class="list">';
-    body += msgHTML(op.label || "匿名", op.text, true, op.imageURL, false);
-    comments.forEach(function (c) {
-      body += '<div class="divider"></div>' + msgHTML(c.label || "匿名", c.text, false, null, c.hasMedia);
-    });
-    body += '</div><div class="fade"></div>';
+    var author='<div class="pauthor" style="margin-top:'+(rc>0?12:16)+'px"><div class="av40">'+PERSON+'</div>'+
+      '<div><div class="pname">'+esc(d.authorLabel||"ユーザー")+'</div>'+
+      '<div class="pmeta"><span>'+ago(d.createdAtMs)+'</span>'+(flag?'<span class="langbadge">'+flag+'</span>':'')+'</div></div></div>';
 
-    var moreText = remaining > 0 ? ("このあと " + remaining + " 件の返信があります 🔒")
-                                 : "続きや返信はアプリで読めます 🔒";
-    var gate = '<div class="gate">' +
-      '<div class="more">' + moreText + '</div>' +
-      '<a class="btn btn-primary" id="openApp" href="#">アプリで続きを見る</a>' +
-      '<a class="btn btn-store" href="' + STORE_URL + '">App Store でダウンロード</a>' +
-      '<div class="hint" id="hint">匿名で相談・交流できるアプリです。</div></div>';
+    var text=d.text?'<div class="ptext">'+esc(d.text)+'</div>':'';
+    var img=d.imageURL?'<img class="pimg" src="'+esc(d.imageURL)+'" alt="" loading="lazy" />':'';
+    var rx=reactions.length?'<div class="rx">'+reactions.map(function(r){return '<span class="p">'+esc(r.emoji)+' '+(r.count||0)+'</span>';}).join('')+'</div>':'';
 
-    content.innerHTML = hero + body + gate;
-    wireOpen(d.deepLink || "shotlingua://");
+    var cbody='';
+    if(cc>0){
+      cbody+='<div class="chead">コメント '+cc+'件</div><div class="msgs">';
+      comments.forEach(function(c){ cbody+='<div class="msg"><div class="av" style="background:'+hue(c.label)+';font-size:12px">'+PERSON.replace('20 20','24 24')+'</div><div class="bd"><div class="nm"><span class="n">'+esc(c.label||"ユーザー")+'</span></div><div class="tx">'+esc(c.text)+'</div></div></div>'; });
+      cbody+='</div>';
+    }
+    // モザイクなし: 途切れゾーンは付けない。丸ごと表示 + 下部CTA。
+    content.innerHTML=buzz+author+text+img+rx+cbody;
+    showCTA(d.deepLink||"shotlingua://");
   }
 
-  // みんなの投稿の 1 枚。
-  function renderPost(d) {
-    var img = d.imageURL ? '<img class="pimg" src="' + esc(d.imageURL) + '" alt="" loading="lazy" />' : "";
-    var card = '<div class="postwrap"><div class="post">' +
-      '<div class="phead"><div class="ava">' + PERSON + '</div><div class="pname">' + esc(d.authorLabel || "ユーザー") + '</div></div>' +
-      (d.text ? '<div class="ptext">' + esc(d.text) + '</div>' : "") +
-      img +
-    '</div></div>';
-    var gate = '<div class="gate">' +
-      '<div class="more">リアクション・コメント・続きはアプリで 🔒</div>' +
-      '<a class="btn btn-primary" id="openApp" href="#">アプリで開く</a>' +
-      '<a class="btn btn-store" href="' + STORE_URL + '">App Store でダウンロード</a>' +
-      '<div class="hint" id="hint">母語で打って学習言語で読む、翻訳SNS。</div></div>';
-    content.innerHTML = card + gate;
-    wireOpen(d.deepLink || "shotlingua://");
-  }
-
-  function wireOpen(appURL) {
-    var ua = navigator.userAgent || "";
-    var inApp = /Instagram|FBAN|FBAV|Line\//i.test(ua);
-    var open = document.getElementById("openApp");
-    if (!open) return;
-    if (inApp) document.getElementById("hint").textContent =
-      "うまく開けない時は、右上の「…」から「外部ブラウザで開く」を選んでください。";
-    open.addEventListener("click", function (e) {
-      e.preventDefault();
-      var start = Date.now();
-      var t = setTimeout(function () { if (Date.now() - start < 1600) location.href = STORE_URL; }, 1200);
-      window.location.href = appURL;
-      window.addEventListener("pagehide", function () { clearTimeout(t); });
+  function showCTA(appURL){
+    var cta=document.getElementById("cta"); cta.style.display="block";
+    var ua=navigator.userAgent||"", inApp=/Instagram|FBAN|FBAV|Line\//i.test(ua);
+    if(inApp) document.getElementById("lineNote").style.display="block";
+    var open=document.getElementById("openApp");
+    open.addEventListener("click",function(e){ e.preventDefault();
+      var start=Date.now();
+      var t=setTimeout(function(){ if(Date.now()-start<1600) location.href=STORE; },1200);
+      window.location.href=appURL;
+      window.addEventListener("pagehide",function(){ clearTimeout(t); });
     });
   }
 })();
