@@ -1,0 +1,9 @@
+name = "shotlingua-og"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+
+# shotlingua.app/share.html を Worker が処理する(要 Cloudflare プロキシON)。
+# 他のパス(index.html 等)は Worker を通らず GitHub Pages のまま。
+routes = [
+  { pattern = "shotlingua.app/share.html", zone_name = "shotlingua.app" }
+]
