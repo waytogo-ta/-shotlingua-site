@@ -3,11 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>ShotLingua で友達になろう</title>
+<title>ShotLingua</title>
 
-<!-- リンクプレビュー (Instagram/Messages/LINE 等で見出し・説明が出る) -->
-<meta property="og:title" content="ShotLingua で友達になろう 🌏" />
-<meta property="og:description" content="日本人や留学生と、翻訳チャットで言葉の壁なく話せるアプリ。リンクから友達追加できます。" />
+<!-- リンクプレビュー (LINE/Instagram/Messages 等の展開カード)。
+     GitHub Pages は静的なので、ここは **招待者ごとに変えられない**。
+     招待者の名前/写真はページ本体 (JS) 側で出す。 -->
+<!-- 【多言語 2026-08-27】リンクプレビューは **静的** なので受け取る人ごとに変えられない
+     (GitHub Pages に動的な出し分けは無い)。誰に届いても片方は読めるよう日英を併記する。
+     日本語だけだと、韓国/フィリピン/台湾の友達に送った時にカードが読めず、
+     「知らないアプリの怪しいリンク」にしか見えない。 -->
+<meta property="og:title" content="Talk even without a shared language ・ 言葉が違っても、通話できる" />
+<meta property="og:description" content="ShotLingua translates what you say, as you say it. ／ 話した言葉をその場で翻訳します。" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="ShotLingua" />
 <meta property="og:image" content="https://waytogo-ta.github.io/-shotlingua-site/appicon.png" />
@@ -16,7 +22,7 @@
 <meta name="apple-itunes-app" content="app-id=6760792510" />
 
 <style>
-  :root { --accent:#7C5CFC; --accent-dark:#5B3FE0; --ink:#1c1c1e; --sub:#6b6b70; }
+  :root { --accent:#7C5CFC; --ink:#1c1c1e; --sub:#6b6b70; --wash:#f1eefe; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { margin:0; padding:0; }
   body {
@@ -27,39 +33,70 @@
   }
   .card {
     width:100%; max-width:380px; text-align:center;
-    background:#fff; border-radius:24px; padding:32px 24px 28px;
+    background:#fff; border-radius:24px; padding:32px 24px 24px;
     box-shadow:0 12px 40px rgba(90,63,224,.12);
   }
   .badge {
-    width:88px; height:88px; border-radius:22px; margin:0 auto 18px;
-    display:block; object-fit:cover;
-    box-shadow:0 6px 18px rgba(90,63,224,.22);
+    width:80px; height:80px; border-radius:20px; margin:0 auto 16px;
+    display:block; object-fit:cover; box-shadow:0 6px 18px rgba(90,63,224,.22);
   }
-  h1 { font-size:21px; line-height:1.4; margin:0 0 8px; }
+  h1 { font-size:21px; line-height:1.45; margin:0 0 8px; }
   .who { color:var(--accent); }
-  p.sub { font-size:14px; line-height:1.6; color:var(--sub); margin:0 0 24px; }
+  .uname { font-family:ui-monospace,Menlo,monospace; color:var(--sub); font-size:13px; }
+  p.sub { font-size:14px; line-height:1.6; color:var(--sub); margin:10px 0 22px; }
+
   .btn {
     display:block; width:100%; padding:15px; border-radius:14px; border:0;
     font-size:16px; font-weight:700; cursor:pointer; text-decoration:none;
-    margin-bottom:12px; transition:transform .05s ease;
+    margin-bottom:10px; transition:transform .05s ease;
   }
   .btn:active { transform:scale(.98); }
   .btn-primary { background:var(--accent); color:#fff; }
   .btn-store { background:#000; color:#fff; }
-  .btn-ghost { background:#f1eefe; color:var(--accent); }
-  .hint { font-size:12px; color:var(--sub); margin-top:14px; line-height:1.6; }
-  .uname { font-family:ui-monospace,Menlo,monospace; color:var(--sub); font-size:13px; margin-top:-2px; }
+
+  /* ID 欄。インストールを挟むと URL は失われるので、
+     **手入力できるコードだけが唯一またげる経路**。ここが本体。 */
+  .codeWrap { display:none; margin:22px 0 6px; }
+  .codeLabel { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:8px; }
+  .codePill {
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    width:100%; padding:16px; border-radius:14px; cursor:pointer;
+    background:var(--wash); border:2px solid #ddd3ff;
+    font-family:ui-monospace,Menlo,monospace; font-size:22px; font-weight:700;
+    letter-spacing:.06em; color:var(--accent);
+  }
+  .codePill:active { transform:scale(.98); }
+  .codeHint { font-size:12.5px; color:var(--sub); margin:10px 0 18px; line-height:1.6; }
+  .copied { color:#12a150; font-weight:700; }
+
+  .sep { display:flex; align-items:center; gap:10px; margin:20px 0 14px; }
+  .sep::before, .sep::after { content:""; flex:1; height:1px; background:#eceaf5; }
+  .sep span { font-size:12px; color:var(--sub); }
+
+  .hint { font-size:12px; color:var(--sub); margin-top:12px; line-height:1.6; }
 </style>
 </head>
 <body>
   <div class="card">
     <img class="badge" src="appicon.png" alt="ShotLingua" />
-    <h1 id="title">ShotLingua で友達になろう！</h1>
+    <h1 id="title"></h1>
     <div class="uname" id="uname"></div>
-    <p class="sub">日本人や留学生と、翻訳チャットで言葉の壁なく話せるアプリ。<br />君の大学にいる人とも知り合えるかも 📱</p>
+    <p class="sub" id="sub"></p>
 
-    <a class="btn btn-primary" id="openApp" href="#">アプリで開く</a>
-    <a class="btn btn-store" id="store" href="https://apps.apple.com/app/id6760792510">App Store でダウンロード</a>
+    <a class="btn btn-primary" id="openApp" href="#"></a>
+
+    <div class="sep"><span id="sepText"></span></div>
+
+    <div class="codeWrap" id="codeWrap">
+      <div class="codeLabel" id="codeLabel"></div>
+      <button class="codePill" id="codePill" type="button">
+        <span id="codeText"></span>
+        <span aria-hidden="true">⧉</span>
+      </button>
+      <div class="codeHint" id="codeHint"></div>
+    </div>
+
+    <a class="btn btn-store" id="store" href="https://apps.apple.com/app/id6760792510"></a>
 
     <div class="hint" id="hint"></div>
   </div>
@@ -67,51 +104,161 @@
 <script>
 (function () {
   var params = new URLSearchParams(location.search);
-  var id = (params.get("id") || "").trim();
-  var uname = (params.get("u") || "").trim();
-  var name = (params.get("n") || "").trim();
+  var id    = (params.get("id") || "").trim();
+  var uname = (params.get("u")  || "").trim();
+  var name  = (params.get("n")  || "").trim();
+  // 【ID 表示 2026-08-27】コピーさせるのは **アカウントの ID (username)**。
+  // 8 桁コード (`c`) も付いてくるが、人に読み上げても覚えられるのは ID のほう。
+  // 入力側 (アプリ) / 逆引き (redeemInvite) は ID と 8 桁コードの両方を受ける。
+  var code  = uname.toLowerCase();
+  var validCode = /^[a-z0-9_]{3,30}$/.test(code);
 
-  // 見出しに送信者名を反映 (例: 「タコさんと ShotLingua で友達になろう！」)。
-  if (name) {
-    document.getElementById("title").innerHTML =
-      '<span class="who">' + escapeHtml(name) + 'さん</span>と ShotLingua で友達になろう！';
+  // --- 文言 (ja / ko / en)。冷たい面 (HelloTalk / Reddit / TikTok) から来る人は
+  //     日本語話者とは限らないので、端末言語で出し分ける。 ---
+  // 【多言語 2026-08-27】アプリ (AppLanguage) と同じ 25 言語。
+  //  冷たい面 (HelloTalk / Reddit / TikTok) から来る人は日本語話者とは限らない。
+  //  未対応の言語は英語に落とす。
+  var STRINGS = {
+    "ja": {titleWith: "と、言葉が違っても通話できます", titlePlain: "言葉が違っても、通話できます", honor: "さん", sub: "ShotLingua は話した言葉をその場で翻訳します 🌏", open: "アプリで開く", sep: "アプリがまだの人は", codeLabel: "この人の ID をコピー", codeHint: "アプリを入れたら、この ID を入力してね", copied: "コピーしました！", store: "App Store でダウンロード", inApp: "うまく開けない場合は、右上の「…」から「外部ブラウザで開く」を選んでください。"},
+    "ko": {titleWith: "님과, 언어가 달라도 통화할 수 있어요", titlePlain: "언어가 달라도 통화할 수 있어요", honor: "", sub: "ShotLingua는 말한 내용을 그 자리에서 번역해 줍니다 🌏", open: "앱에서 열기", sep: "앱이 아직 없다면", codeLabel: "이 사람의 아이디 복사하기", codeHint: "앱을 설치한 뒤 이 아이디를 입력해 주세요", copied: "복사했어요!", store: "App Store에서 다운로드", inApp: "열리지 않으면 오른쪽 위 「…」에서 «외부 브라우저로 열기»를 선택해 주세요."},
+    "en": {titleWith: " — talk even without a shared language", titlePlain: "Talk even without a shared language", honor: "", sub: "ShotLingua translates what you say, as you say it 🌏", open: "Open in the app", sep: "Don't have the app yet?", codeLabel: "Copy their ID", codeHint: "Install the app, then enter this ID", copied: "Copied!", store: "Download on the App Store", inApp: "If it doesn't open, tap “…” at the top right and choose “Open in browser”."},
+    "zh": {titleWith: "，语言不同也能通话", titlePlain: "语言不同也能通话", honor: "", sub: "ShotLingua 会即时翻译你说的话 🌏", open: "在应用中打开", sep: "还没有安装应用？", codeLabel: "复制他的 ID", codeHint: "安装应用后，输入这个 ID", copied: "已复制！", store: "从 App Store 下载", inApp: "如果打不开，请点右上角「…」选择「在浏览器中打开」。"},
+    "zh-TW": {titleWith: "，語言不同也能通話", titlePlain: "語言不同也能通話", honor: "", sub: "ShotLingua 會即時翻譯你說的話 🌏", open: "在應用程式中開啟", sep: "還沒有安裝嗎？", codeLabel: "複製他的 ID", codeHint: "安裝後輸入這個 ID", copied: "已複製！", store: "從 App Store 下載", inApp: "如果打不開，請點右上角「…」選擇「用瀏覽器開啟」。"},
+    "yue": {titleWith: "，就算語言唔同都可以傾偈", titlePlain: "就算語言唔同都可以傾偈", honor: "", sub: "ShotLingua 會即刻翻譯你講嘅嘢 🌏", open: "喺 App 度開", sep: "仲未裝 App？", codeLabel: "複製佢個 ID", codeHint: "裝咗 App 之後入呢個 ID", copied: "複製咗！", store: "喺 App Store 下載", inApp: "如果開唔到，撳右上角「…」揀「用瀏覽器開」。"},
+    "vi": {titleWith: " — nói chuyện dù không chung ngôn ngữ", titlePlain: "Nói chuyện dù không chung ngôn ngữ", honor: "", sub: "ShotLingua dịch ngay điều bạn nói 🌏", open: "Mở trong ứng dụng", sep: "Chưa có ứng dụng?", codeLabel: "Sao chép ID của họ", codeHint: "Cài ứng dụng rồi nhập ID này", copied: "Đã sao chép!", store: "Tải trên App Store", inApp: "Nếu không mở được, chạm “…” ở góc trên bên phải và chọn “Mở bằng trình duyệt”."},
+    "th": {titleWith: " — คุยกันได้แม้ใช้คนละภาษา", titlePlain: "คุยกันได้แม้ใช้คนละภาษา", honor: "", sub: "ShotLingua แปลสิ่งที่คุณพูดทันที 🌏", open: "เปิดในแอป", sep: "ยังไม่มีแอปใช่ไหม", codeLabel: "คัดลอก ID ของเขา", codeHint: "ติดตั้งแอปแล้วใส่ ID นี้", copied: "คัดลอกแล้ว!", store: "ดาวน์โหลดบน App Store", inApp: "หากเปิดไม่ได้ ให้แตะ “…” มุมขวาบน แล้วเลือก “เปิดในเบราว์เซอร์”"},
+    "my": {titleWith: " — ဘာသာစကားမတူလည်း စကားပြောနိုင်ပါတယ်", titlePlain: "ဘာသာစကားမတူလည်း စကားပြောနိုင်ပါတယ်", honor: "", sub: "ShotLingua က ပြောလိုက်တာကို ချက်ချင်း ဘာသာပြန်ပေးပါတယ် 🌏", open: "အက်ပ်တွင် ဖွင့်ရန်", sep: "အက်ပ် မရှိသေးဘူးလား", codeLabel: "သူ့ ID ကို ကူးယူရန်", codeHint: "အက်ပ်ထည့်ပြီးရင် ဒီ ID ကို ရိုက်ထည့်ပါ", copied: "ကူးယူပြီးပါပြီ!", store: "App Store တွင် ဒေါင်းလုဒ်လုပ်ရန်", inApp: "မဖွင့်နိုင်ပါက ညာဘက်အပေါ်ရှိ “…” ကိုနှိပ်ပြီး “ဘရောက်ဇာဖြင့်ဖွင့်” ကို ရွေးပါ။"},
+    "km": {titleWith: " — និយាយបានទោះភាសាខុសគ្នា", titlePlain: "និយាយបានទោះភាសាខុសគ្នា", honor: "", sub: "ShotLingua បកប្រែអ្វីដែលអ្នកនិយាយភ្លាមៗ 🌏", open: "បើកក្នុងកម្មវិធី", sep: "មិនទាន់មានកម្មវិធីទេ?", codeLabel: "ចម្លង ID របស់គាត់", codeHint: "ដំឡើងកម្មវិធី រួចបញ្ចូល ID នេះ", copied: "បានចម្លង!", store: "ទាញយកនៅ App Store", inApp: "បើមិនបើកទេ សូមចុច “…” ខាងស្តាំខាងលើ ហើយជ្រើស “បើកក្នុងកម្មវិធីរុករក”។"},
+    "ms": {titleWith: " — berbual walaupun bahasa berbeza", titlePlain: "Berbual walaupun bahasa berbeza", honor: "", sub: "ShotLingua menterjemah apa yang anda kata serta-merta 🌏", open: "Buka dalam aplikasi", sep: "Belum ada aplikasi?", codeLabel: "Salin ID mereka", codeHint: "Pasang aplikasi, kemudian masukkan ID ini", copied: "Disalin!", store: "Muat turun di App Store", inApp: "Jika tidak terbuka, ketik “…” di kanan atas dan pilih “Buka dalam pelayar”."},
+    "hi": {titleWith: " — अलग भाषा होने पर भी बात कर सकते हैं", titlePlain: "अलग भाषा होने पर भी बात कर सकते हैं", honor: "", sub: "ShotLingua आपकी कही बात का तुरंत अनुवाद करता है 🌏", open: "ऐप में खोलें", sep: "अभी तक ऐप नहीं है?", codeLabel: "इनकी ID कॉपी करें", codeHint: "ऐप इंस्टॉल करके यह ID डालें", copied: "कॉपी हो गया!", store: "App Store से डाउनलोड करें", inApp: "न खुले तो ऊपर दाईं ओर “…” दबाकर “ब्राउज़र में खोलें” चुनें।"},
+    "si": {titleWith: " — භාෂාව වෙනස් වුවත් කතා කළ හැකියි", titlePlain: "භාෂාව වෙනස් වුවත් කතා කළ හැකියි", honor: "", sub: "ShotLingua ඔබ කියන දේ එසැණින් පරිවර්තනය කරයි 🌏", open: "යෙදුමේ විවෘත කරන්න", sep: "තවම යෙදුම නැද්ද?", codeLabel: "ඔහුගේ ID පිටපත් කරන්න", codeHint: "යෙදුම ස්ථාපනය කර මෙම ID ඇතුළත් කරන්න", copied: "පිටපත් කළා!", store: "App Store එකෙන් බාගන්න", inApp: "විවෘත නොවේ නම් ඉහළ දකුණේ “…” තට්ටු කර “බ්‍රවුසරයේ විවෘත කරන්න” තෝරන්න."},
+    "ur": {titleWith: " — الگ زبان ہونے کے باوجود بات کریں", titlePlain: "الگ زبان ہونے کے باوجود بات کریں", honor: "", sub: "ShotLingua آپ کی بات کا فوراً ترجمہ کرتا ہے 🌏", open: "ایپ میں کھولیں", sep: "ابھی تک ایپ نہیں ہے؟", codeLabel: "ان کی ID کاپی کریں", codeHint: "ایپ انسٹال کر کے یہ ID درج کریں", copied: "کاپی ہو گیا!", store: "App Store سے ڈاؤن لوڈ کریں", inApp: "اگر نہ کھلے تو اوپر دائیں “…” دبا کر “براؤزر میں کھولیں” منتخب کریں۔"},
+    "mn": {titleWith: " — хэл өөр байсан ч ярьж болно", titlePlain: "Хэл өөр байсан ч ярьж болно", honor: "", sub: "ShotLingua таны хэлснийг тэр дороо орчуулна 🌏", open: "Апп дотор нээх", sep: "Апп хараахан алга уу?", codeLabel: "Түүний ID хуулах", codeHint: "Аппаа суулгаад энэ ID-г оруулна уу", copied: "Хууллаа!", store: "App Store-оос татах", inApp: "Нээгдэхгүй бол баруун дээд “…” дарж «Хөтөчөөр нээх» сонгоно уу."},
+    "pt-BR": {titleWith: " — conversem mesmo sem um idioma em comum", titlePlain: "Converse mesmo sem um idioma em comum", honor: "", sub: "O ShotLingua traduz o que você fala, na hora 🌏", open: "Abrir no aplicativo", sep: "Ainda não tem o app?", codeLabel: "Copiar o ID", codeHint: "Instale o app e digite este ID", copied: "Copiado!", store: "Baixar na App Store", inApp: "Se não abrir, toque em “…” no canto superior direito e escolha “Abrir no navegador”."},
+    "fr": {titleWith: " — parlez même sans langue commune", titlePlain: "Parlez même sans langue commune", honor: "", sub: "ShotLingua traduit ce que vous dites, à l'instant 🌏", open: "Ouvrir dans l'app", sep: "Vous n'avez pas encore l'app ?", codeLabel: "Copier son identifiant", codeHint: "Installez l'app, puis saisissez cet identifiant", copied: "Copié !", store: "Télécharger sur l'App Store", inApp: "Si ça ne s'ouvre pas, touchez « … » en haut à droite et choisissez « Ouvrir dans le navigateur »."},
+    "ru": {titleWith: " — говорите, даже если языки разные", titlePlain: "Говорите, даже если языки разные", honor: "", sub: "ShotLingua переводит сказанное сразу же 🌏", open: "Открыть в приложении", sep: "Ещё нет приложения?", codeLabel: "Скопировать его ID", codeHint: "Установите приложение и введите этот ID", copied: "Скопировано!", store: "Загрузить в App Store", inApp: "Если не открывается, нажмите «…» справа вверху и выберите «Открыть в браузере»."},
+    "id": {titleWith: " — mengobrol meski beda bahasa", titlePlain: "Mengobrol meski beda bahasa", honor: "", sub: "ShotLingua menerjemahkan yang kamu ucapkan seketika 🌏", open: "Buka di aplikasi", sep: "Belum punya aplikasinya?", codeLabel: "Salin ID-nya", codeHint: "Pasang aplikasinya, lalu masukkan ID ini", copied: "Tersalin!", store: "Unduh di App Store", inApp: "Jika tidak terbuka, ketuk “…” di kanan atas lalu pilih “Buka di peramban”."},
+    "fil": {titleWith: " — makakausap kahit magkaibang wika", titlePlain: "Makakausap kahit magkaibang wika", honor: "", sub: "Isinasalin ng ShotLingua ang sinasabi mo, agad 🌏", open: "Buksan sa app", sep: "Wala pa ang app?", codeLabel: "Kopyahin ang ID niya", codeHint: "I-install ang app, tapos ilagay ang ID na ito", copied: "Nakopya na!", store: "I-download sa App Store", inApp: "Kung hindi bumukas, i-tap ang “…” sa kanang itaas at piliin ang “Buksan sa browser”."},
+    "ne": {titleWith: " — भाषा फरक भए पनि कुरा गर्न सकिन्छ", titlePlain: "भाषा फरक भए पनि कुरा गर्न सकिन्छ", honor: "", sub: "ShotLingua ले तपाईंले भनेको कुरा तुरुन्तै अनुवाद गर्छ 🌏", open: "एपमा खोल्नुहोस्", sep: "एप छैन?", codeLabel: "उहाँको ID कपी गर्नुहोस्", codeHint: "एप इन्स्टल गरेर यो ID हाल्नुहोस्", copied: "कपी भयो!", store: "App Store बाट डाउनलोड गर्नुहोस्", inApp: "नखुले माथि दायाँ “…” थिचेर “ब्राउजरमा खोल्नुहोस्” रोज्नुहोस्।"},
+    "es": {titleWith: " — hablad aunque no compartáis idioma", titlePlain: "Habla aunque no compartáis idioma", honor: "", sub: "ShotLingua traduce lo que dices, al momento 🌏", open: "Abrir en la app", sep: "¿Aún no tienes la app?", codeLabel: "Copiar su ID", codeHint: "Instala la app y escribe este ID", copied: "¡Copiado!", store: "Descargar en el App Store", inApp: "Si no se abre, toca «…» arriba a la derecha y elige «Abrir en el navegador»."},
+    "de": {titleWith: " — sprecht auch ohne gemeinsame Sprache", titlePlain: "Sprich auch ohne gemeinsame Sprache", honor: "", sub: "ShotLingua übersetzt, was du sagst — sofort 🌏", open: "In der App öffnen", sep: "Noch keine App?", codeLabel: "ID kopieren", codeHint: "App installieren und diese ID eingeben", copied: "Kopiert!", store: "Im App Store laden", inApp: "Falls es nicht öffnet, tippe oben rechts auf „…“ und wähle „Im Browser öffnen“."},
+    "nl": {titleWith: " — praat ook zonder gemeenschappelijke taal", titlePlain: "Praat ook zonder gemeenschappelijke taal", honor: "", sub: "ShotLingua vertaalt wat je zegt, meteen 🌏", open: "In de app openen", sep: "Nog geen app?", codeLabel: "ID kopiëren", codeHint: "Installeer de app en voer deze ID in", copied: "Gekopieerd!", store: "Downloaden in de App Store", inApp: "Lukt het niet? Tik rechtsboven op “…” en kies “Openen in browser”."},
+    "fa": {titleWith: " — حتی بدون زبان مشترک گفت‌وگو کنید", titlePlain: "حتی بدون زبان مشترک گفت‌وگو کنید", honor: "", sub: "ShotLingua آنچه می‌گویید را همان لحظه ترجمه می‌کند 🌏", open: "باز کردن در برنامه", sep: "هنوز برنامه را ندارید؟", codeLabel: "کپی کردن شناسه او", codeHint: "برنامه را نصب کنید و این شناسه را وارد کنید", copied: "کپی شد!", store: "دانلود از App Store", inApp: "اگر باز نشد، بالا سمت راست «…» را بزنید و «باز کردن در مرورگر» را انتخاب کنید."},
+  };
+
+  // ⚠️ STRINGS は **必ず言語判定より前** に置くこと。`var` は宣言だけ巻き上げて
+  //  代入は巻き上げないため、下の判定内 `STRINGS[base]` が undefined を触って
+  //  TypeError で **スクリプト全体が停止** する (名前もIDのコピー欄も出なくなる)。
+  // 端末言語 → 表示言語。zh-TW / pt-BR のように地域まで見ないと別言語になるものが
+  // あるので、まず完全一致、次に主言語、最後に英語の順で解決する。
+  var raw = (navigator.language || "en").toLowerCase();
+  var lang = (function () {
+    var exact = { "zh-tw": "zh-TW", "zh-hant": "zh-TW", "zh-hk": "yue",
+                  "pt-br": "pt-BR", "pt": "pt-BR", "tl": "fil" };
+    if (exact[raw]) return exact[raw];
+    var base = raw.split("-")[0];
+    if (exact[base]) return exact[base];
+    if (base === "zh") return raw.indexOf("hant") >= 0 ? "zh-TW" : "zh";
+    return STRINGS[base] ? base : "en";
+  })();
+  // アラビア文字系は右から左へ。ここを入れないと句読点と記号が行末で乱れる。
+  if (lang === "ur" || lang === "fa") document.documentElement.setAttribute("dir", "rtl");
+  document.documentElement.setAttribute("lang", lang);
+
+  var T = STRINGS[lang] || STRINGS.en;
+
+  var $ = function (elId) { return document.getElementById(elId); };
+
+  $("title").innerHTML = name
+    ? '<span class="who">' + escapeHtml(name) + T.honor + "</span>" + T.titleWith
+    : T.titlePlain;
+  if (uname) $("uname").textContent = "@" + uname;
+  $("sub").textContent      = T.sub;
+  $("openApp").textContent  = T.open;
+  $("sepText").textContent  = T.sep;
+  $("codeLabel").textContent = T.codeLabel;
+  $("codeHint").textContent  = T.codeHint;
+  $("store").textContent     = T.store;
+
+  // --- ID 欄 (ID がリンクに乗っている時だけ出す) ---
+  if (validCode) {
+    $("codeWrap").style.display = "block";
+    $("codeText").textContent = "@" + code;
+    $("codePill").addEventListener("click", function () {
+      copyText("@" + code, function () {
+        var hint = $("codeHint");
+        hint.textContent = T.copied;
+        hint.classList.add("copied");
+        setTimeout(function () {
+          hint.textContent = T.codeHint;
+          hint.classList.remove("copied");
+        }, 1800);
+      });
+    });
   }
-  if (uname) document.getElementById("uname").textContent = "@" + uname;
 
-  // アプリを開くカスタムスキーム (既存アプリが受ける形式)。
-  var appURL = id ? ("shotlingua://add?id=" + encodeURIComponent(id)) : "shotlingua://";
+  // --- アプリを開く / App Store (Google Play は Android 版が無いので載せない) ---
+  // 【アトリビューション】友達追加(id) に加えて **流入元パラメータも全部アプリへ引き継ぐ**。
+  // アプリ側 AttributionManager.handle が source/channel/campaign/invite_code/inviter_* を解析する。
+  // これが無いと、インストールが招待経由なのか App Store 検索なのか区別できない
+  // (実測: first_open_attributed は 122 件すべて organic_or_unknown だった)。
+  // ⚠️ サイト側リポジトリ (-shotlingua-site) の未コミット実装を移植したもの。消さないこと。
+  var fwd = [];
+  function addParam(k, v) { v = (v || "").trim(); if (v) fwd.push(encodeURIComponent(k) + "=" + encodeURIComponent(v)); }
+  addParam("id", id);
+  addParam("u", uname);
+  ["source", "channel", "campaign", "invite_code", "inviter_user_id", "inviter_username"].forEach(function (k) {
+    addParam(k, params.get(k));
+  });
+  // inviter_user_id が未指定なら、招待リンクの id を招待主として渡す (旧リンク互換)。
+  if (id && !params.get("inviter_user_id")) addParam("inviter_user_id", id);
+  // 明示 source が無い招待リンクは friend_invite とみなす。
+  if (!params.get("source")) addParam("source", "friend_invite");
+  var appURL = fwd.length ? ("shotlingua://add?" + fwd.join("&")) : "shotlingua://";
   var storeURL = "https://apps.apple.com/app/id6760792510";
+  $("openApp").setAttribute("href", appURL);
 
-  document.getElementById("openApp").setAttribute("href", appURL);
-
-  // Instagram / Facebook の in-app ブラウザはカスタムスキーム遷移を抑制しがち。
-  // その場合は「Safari で開く」を促す (同じ https URL を外部ブラウザで開かせる)。
-  var ua = navigator.userAgent || "";
+  var ua    = navigator.userAgent || "";
   var inApp = /Instagram|FBAN|FBAV|Line\//i.test(ua);
   var isIOS = /iPhone|iPad|iPod/i.test(ua);
 
-  if (inApp) {
-    // Instagram/LINE 等の in-app ブラウザはカスタムスキーム遷移を抑制しがち。
-    // その場合はブラウザ自身の「…」メニュー →「外部ブラウザで開く」を案内する。
-    document.getElementById("hint").textContent =
-      "うまく開けない場合は、右上の「…」から「外部ブラウザで開く」を選んでください。";
-  }
+  // Instagram/LINE 等の in-app ブラウザはカスタムスキーム遷移を抑制しがち。
+  if (inApp) $("hint").textContent = T.inApp;
 
-  // インストール済みなら自動でアプリを起動 (失敗時は App Store ボタンが残る)。
-  document.getElementById("openApp").addEventListener("click", tryOpenApp);
-  if (isIOS && !inApp && id) {
-    setTimeout(tryOpenApp, 350);
-  }
+  $("openApp").addEventListener("click", tryOpenApp);
+  // 【重要】コードがある時は自動遷移しない。未インストールの人を勝手に App Store へ
+  // 飛ばすと、**コードをコピーする前にページを離れてしまう**。インストールを挟むと
+  // URL は失われるので、そこでコードを取り逃すと二度と紐付かない。
+  if (isIOS && !inApp && id && !validCode) setTimeout(tryOpenApp, 350);
 
   function tryOpenApp(e) {
     if (e) e.preventDefault();
     var start = Date.now();
-    // アプリ未インストールならスキーム遷移は無反応 → 一定時間後 App Store へ。
     var t = setTimeout(function () {
       if (Date.now() - start < 1600) location.href = storeURL;
     }, 1200);
     window.location.href = appURL;
     window.addEventListener("pagehide", function () { clearTimeout(t); });
+  }
+
+  // navigator.clipboard は非 https / 古い in-app ブラウザで落ちるので必ず退避策を持つ。
+  function copyText(text, done) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { legacyCopy(text, done); });
+    } else {
+      legacyCopy(text, done);
+    }
+  }
+  function legacyCopy(text, done) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); done(); } catch (err) { /* 失敗しても文字は見えている */ }
+    document.body.removeChild(ta);
   }
 
   function escapeHtml(s) {
