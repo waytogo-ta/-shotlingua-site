@@ -126,7 +126,7 @@
     <h2 id="s2t"></h2>
     <p id="s2c"></p>
     <div class="f2f">
-      <video src="demo-f2f-table.mp4" poster="demo-f2f-table-poster.jpg" autoplay muted loop playsinline></video>
+      <video id="f2fVideo" src="demo-f2f-table.mp4" poster="demo-f2f-table-poster.jpg" autoplay muted loop playsinline preload="auto"></video>
     </div>
   </section>
 
@@ -266,6 +266,18 @@
     try { document.execCommand("copy"); done(); } catch (err) {}
     document.body.removeChild(ta);
   }
+
+  // 置いて話すの動画: 低電力モード等で autoplay が止まった時のために、見えた時と最初のタッチで play() を再試行する。
+  (function () {
+    var v = $("f2fVideo"); if (!v) return;
+    v.muted = true;
+    function tryPlay() { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    v.addEventListener("loadeddata", tryPlay);
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) tryPlay(); }); }, { threshold: .25 }).observe(v);
+    }
+    ["touchstart", "click", "scroll"].forEach(function (ev) { window.addEventListener(ev, tryPlay, { once: true, passive: true }); });
+  })();
 
   // ===== デモ(CallDemoScript と同じ台本を 14 秒でループ) =====
   var fb = (lang === "ja" || lang === "ko") ? lang : "en";
