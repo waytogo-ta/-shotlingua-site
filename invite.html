@@ -3,121 +3,124 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0E0D12" />
 <title>ShotLingua</title>
-
-<!-- リンクプレビュー (LINE/Instagram/Messages 等の展開カード)。
-     GitHub Pages は静的なので、ここは **招待者ごとに変えられない**。
-     招待者の名前/写真はページ本体 (JS) 側で出す。 -->
-<!-- 【多言語 2026-08-27】リンクプレビューは **静的** なので受け取る人ごとに変えられない
-     (GitHub Pages に動的な出し分けは無い)。誰に届いても片方は読めるよう日英を併記する。
-     日本語だけだと、韓国/フィリピン/台湾の友達に送った時にカードが読めず、
-     「知らないアプリの怪しいリンク」にしか見えない。 -->
-<meta property="og:title" content="Talk even without a shared language ・ 言葉が違っても、通話できる" />
-<meta property="og:description" content="ShotLingua translates what you say, as you say it. ／ 話した言葉をその場で翻訳します。" />
+<!-- リンクプレビューは静的(受け取る人ごとに変えられない)。日英併記。 -->
+<meta property="og:title" content="Different languages, still close friends ・ 言葉が違っても、仲良くなれます" />
+<meta property="og:description" content="Calls with live subtitles across languages. ／ 離れていても、リアルタイム翻訳で通話ができる。" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="ShotLingua" />
 <meta property="og:image" content="https://waytogo-ta.github.io/-shotlingua-site/appicon.png" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:image" content="https://waytogo-ta.github.io/-shotlingua-site/appicon.png" />
 <meta name="apple-itunes-app" content="app-id=6760792510" />
-
 <style>
-  :root { --accent:#7C5CFC; --ink:#1c1c1e; --sub:#6b6b70; --wash:#f1eefe; }
+  :root { --bg:#0E0D12; --bgTop:#17131F; --ink:#fff; --sub:rgba(255,255,255,.72); --mine:#1FA398; --mineL:#7FE3CB; --peer:#6C4DF5; --peerL:#B9A8FF; --peer2:#E8604C; --peer2L:#FFB3A6; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html,body { margin:0; padding:0; }
-  body {
-    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
-    background:linear-gradient(160deg,#f6f4ff 0%,#ffffff 60%);
-    color:var(--ink); min-height:100vh;
-    display:flex; align-items:center; justify-content:center; padding:24px;
-  }
-  .card {
-    width:100%; max-width:380px; text-align:center;
-    background:#fff; border-radius:24px; padding:32px 24px 24px;
-    box-shadow:0 12px 40px rgba(90,63,224,.12);
-  }
-  .badge {
-    width:80px; height:80px; border-radius:20px; margin:0 auto 16px;
-    display:block; object-fit:cover; box-shadow:0 6px 18px rgba(90,63,224,.22);
-  }
-  h1 { font-size:21px; line-height:1.45; margin:0 0 8px; }
-  .who { color:var(--accent); }
-  .uname { font-family:ui-monospace,Menlo,monospace; color:var(--sub); font-size:13px; }
-  p.sub { font-size:14px; line-height:1.6; color:var(--sub); margin:10px 0 22px; }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif; min-height:100vh; }
 
-  .btn {
-    display:block; width:100%; padding:15px; border-radius:14px; border:0;
-    font-size:16px; font-weight:700; cursor:pointer; text-decoration:none;
-    margin-bottom:10px; transition:transform .05s ease;
-  }
+  /* ===== デモ(通話画面の描き直し) ===== */
+  .hero { position:relative; width:100%; overflow:hidden; }
+  .stageWrap { position:relative; width:100%; height:600px; overflow:hidden; }   /* 高さは JS が幅から決める(vh は使わない: 端末で崩れる) */
+  .stage { position:absolute; left:0; top:0; width:390px; height:693px; transform-origin:0 0; overflow:hidden; }
+  .mesh { position:absolute; inset:0; background:var(--bg); }
+  .glow { position:absolute; width:520px; height:520px; left:-160px; top:-170px; border-radius:50%; filter:blur(60px); opacity:.55; transition:background .6s; }
+  .glow2 { position:absolute; width:420px; height:420px; right:-200px; bottom:-120px; border-radius:50%; filter:blur(70px); opacity:.25; transition:background .6s; }
+  .wordmark { position:absolute; left:18px; top:18px; height:30px; padding:0 10px 0 6px; display:flex; align-items:center; gap:6px; border-radius:15px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.3); font-size:13px; }
+  .wordmark img { width:18px; height:18px; border-radius:5px; }
+  .wordmark b { font-family:Georgia,"Hiragino Mincho ProN",serif; font-weight:400; }
+  .wordmark span { font-size:10px; letter-spacing:.08em; opacity:.7; }
+  .blob { position:absolute; left:24px; top:58px; width:190px; height:190px; }
+  .speaker { position:absolute; width:104px; height:104px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,.45); box-shadow:0 6px 12px rgba(0,0,0,.4); left:67px; top:101px; transition:transform .5s cubic-bezier(.34,1.56,.64,1); }
+  .spkLabel { position:absolute; left:24px; width:190px; top:254px; text-align:center; font-size:12px; letter-spacing:.06em; font-weight:600; display:flex; justify-content:center; gap:6px; align-items:center; }
+  .bars { display:inline-flex; gap:2px; height:12px; align-items:center; }
+  .bars i { width:3px; border-radius:2px; height:4px; }
+  .listener { position:absolute; left:274px; top:160px; width:76px; text-align:center; }
+  .listener img { width:76px; height:76px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,.45); box-shadow:0 6px 12px rgba(0,0,0,.4); transition:transform .5s cubic-bezier(.34,1.56,.64,1); }
+  .listener div { font-size:11px; letter-spacing:.06em; margin-top:6px; }
+  .cards { position:absolute; left:20px; right:20px; top:300px; height:280px; display:flex; flex-direction:column; justify-content:flex-end; gap:10px; }
+  .card { padding:13px 16px 14px; border-radius:24px; background:linear-gradient(rgba(255,255,255,.20),rgba(255,255,255,.10)); border:1px solid rgba(255,255,255,.36); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
+  .card.dim { opacity:.7; }
+  .card.volatile { background:rgba(255,255,255,.05); border:1.2px dashed rgba(255,255,255,.35); }
+  .card .who { font-size:11px; letter-spacing:.08em; font-weight:600; display:flex; align-items:center; gap:6px; margin-bottom:7px; }
+  .card .who i { width:8px; height:8px; border-radius:50%; display:inline-block; }
+  .card .txt { font-size:17px; line-height:1.45; }
+  .card.dim .txt { font-size:15px; }
+  .card .txt .k0 { color:#fff; } .card .txt .k1 { color:#fff; border-radius:3px; } .card .txt .k2 { color:rgba(255,255,255,.42); }
+  .card .tr { margin-top:7px; padding-left:10px; border-left:2px solid; font-size:14px; line-height:1.4; color:rgba(255,255,255,.78); opacity:0; transform:translateY(10px); transition:opacity .42s, transform .42s; }
+  .card .tr.on { opacity:1; transform:none; }
+  .fade { position:absolute; left:0; right:0; bottom:0; height:38%; background:linear-gradient(rgba(14,13,18,0), var(--bg) 75%); pointer-events:none; }
+
+  /* ===== 前景 ===== */
+  .fore { position:relative; margin-top:-40px; padding:0 20px 28px; text-align:center; }
+  h1 { font-family:Georgia,"Hiragino Mincho ProN","Noto Serif JP",serif; font-weight:400; font-size:26px; line-height:1.35; margin:0 0 8px; }
+  .lead { color:var(--sub); font-size:14px; line-height:1.6; margin:0 0 18px; }
+  .inviter { display:flex; align-items:center; justify-content:center; gap:10px; margin:0 0 14px; font-size:15px; }
+  .inviter .who { font-weight:700; }
+  .inviter .uname { font-family:ui-monospace,Menlo,monospace; color:var(--sub); font-size:13px; }
+  .btn { display:block; width:100%; padding:16px; border-radius:16px; border:0; font-size:16px; font-weight:700; cursor:pointer; text-decoration:none; margin-bottom:10px; transition:transform .05s ease; }
   .btn:active { transform:scale(.98); }
-  .btn-primary { background:var(--accent); color:#fff; }
-  .btn-store { background:#000; color:#fff; }
-
-  /* ID 欄。インストールを挟むと URL は失われるので、
-     **手入力できるコードだけが唯一またげる経路**。ここが本体。 */
-  .codeWrap { display:none; margin:22px 0 6px; }
-  .codeLabel { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:8px; }
-  .codePill {
-    display:flex; align-items:center; justify-content:center; gap:10px;
-    width:100%; padding:16px; border-radius:14px; cursor:pointer;
-    background:var(--wash); border:2px solid #ddd3ff;
-    font-family:ui-monospace,Menlo,monospace; font-size:22px; font-weight:700;
-    letter-spacing:.06em; color:var(--accent);
-  }
-  .codePill:active { transform:scale(.98); }
-  .codeHint { font-size:12.5px; color:var(--sub); margin:10px 0 18px; line-height:1.6; }
-  .copied { color:#12a150; font-weight:700; }
-
-  .sep { display:flex; align-items:center; gap:10px; margin:20px 0 14px; }
-  .sep::before, .sep::after { content:""; flex:1; height:1px; background:#eceaf5; }
+  .btn-primary { background:#fff; color:var(--bg); box-shadow:0 8px 24px rgba(0,0,0,.35); }
+  .btn-store { background:rgba(255,255,255,.10); color:#fff; border:1px solid rgba(255,255,255,.28); }
+  .sep { display:flex; align-items:center; gap:10px; margin:18px 0 12px; }
+  .sep::before, .sep::after { content:""; flex:1; height:1px; background:rgba(255,255,255,.14); }
   .sep span { font-size:12px; color:var(--sub); }
-
-  .hint { font-size:12px; color:var(--sub); margin-top:12px; line-height:1.6; }
+  .qrWrap { display:none; margin:0 auto 14px; width:168px; padding:10px; background:#fff; border-radius:18px; }
+  .qrWrap canvas, .qrWrap img { width:148px !important; height:148px !important; display:block; }
+  .codeWrap { display:none; margin:6px 0 4px; }
+  .codeLabel { font-size:13px; font-weight:700; margin-bottom:8px; }
+  .codePill { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; padding:16px; border-radius:14px; cursor:pointer; background:rgba(255,255,255,.08); border:1.5px solid rgba(255,255,255,.28); font-family:ui-monospace,Menlo,monospace; font-size:22px; font-weight:700; letter-spacing:.06em; color:#fff; }
+  .codePill:active { transform:scale(.98); }
+  .codeHint { font-size:12.5px; color:var(--sub); margin:10px 0 16px; line-height:1.6; }
+  .copied { color:#7FE3CB; font-weight:700; }
+  .hint { font-size:12px; color:var(--sub); margin-top:10px; line-height:1.6; }
 </style>
 </head>
 <body>
-  <div class="card">
-    <img class="badge" src="appicon.png" alt="ShotLingua" />
+  <div class="hero">
+    <div class="stageWrap">
+      <div class="stage" id="stage">
+        <div class="mesh"><div class="glow" id="glow"></div><div class="glow2" id="glow2"></div></div>
+        <div class="wordmark"><img src="appicon.png" alt="" /><b>ShotLingua</b><span id="wmSub"></span></div>
+        <svg class="blob" viewBox="0 0 190 190"><path id="blobA" fill="rgba(108,77,245,.45)"/><path id="blobB" fill="rgba(108,77,245,.65)"/></svg>
+        <img class="speaker" id="speakerImg" src="demo-michael.jpg" alt="" />
+        <div class="spkLabel" id="spkLabel"><span class="bars" id="bars"><i></i><i></i><i></i></span><span id="spkName"></span></div>
+        <div class="listener" id="listener"><img id="listenerImg" src="demo-me.jpg" alt="" /><div id="listenerName"></div></div>
+        <div class="cards" id="cards"></div>
+      </div>
+    </div>
+    <div class="fade"></div>
+  </div>
+
+  <div class="fore">
     <h1 id="title"></h1>
-    <div class="uname" id="uname"></div>
-    <p class="sub" id="sub"></p>
+    <p class="lead" id="sub"></p>
+    <div class="inviter" id="inviter" style="display:none"><span class="who" id="who"></span><span class="uname" id="uname"></span></div>
 
     <a class="btn btn-primary" id="openApp" href="#"></a>
-
-    <div class="sep"><span id="sepText"></span></div>
-
-    <div class="codeWrap" id="codeWrap">
-      <div class="codeLabel" id="codeLabel"></div>
-      <button class="codePill" id="codePill" type="button">
-        <span id="codeText"></span>
-        <span aria-hidden="true">⧉</span>
-      </button>
-      <div class="codeHint" id="codeHint"></div>
-    </div>
-
     <a class="btn btn-store" id="store" href="https://apps.apple.com/app/id6760792510"></a>
 
+    <div class="sep"><span id="sepText"></span></div>
+    <div class="qrWrap" id="qrWrap"></div>
+    <div class="codeWrap" id="codeWrap">
+      <div class="codeLabel" id="codeLabel"></div>
+      <button class="codePill" id="codePill" type="button"><span id="codeText"></span><span aria-hidden="true">⧉</span></button>
+      <div class="codeHint" id="codeHint"></div>
+    </div>
     <div class="hint" id="hint"></div>
   </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 (function () {
   var params = new URLSearchParams(location.search);
   var id    = (params.get("id") || "").trim();
   var uname = (params.get("u")  || "").trim();
   var name  = (params.get("n")  || "").trim();
-  // 【ID 表示 2026-08-27】コピーさせるのは **アカウントの ID (username)**。
-  // 8 桁コード (`c`) も付いてくるが、人に読み上げても覚えられるのは ID のほう。
-  // 入力側 (アプリ) / 逆引き (redeemInvite) は ID と 8 桁コードの両方を受ける。
   var code  = uname.toLowerCase();
   var validCode = /^[a-z0-9_]{3,30}$/.test(code);
 
-  // --- 文言 (ja / ko / en)。冷たい面 (HelloTalk / Reddit / TikTok) から来る人は
-  //     日本語話者とは限らないので、端末言語で出し分ける。 ---
-  // 【多言語 2026-08-27】アプリ (AppLanguage) と同じ 25 言語。
-  //  冷たい面 (HelloTalk / Reddit / TikTok) から来る人は日本語話者とは限らない。
-  //  未対応の言語は英語に落とす。
   var STRINGS = {
     "ja": {titleWith: "と、言葉が違っても通話できます", titlePlain: "言葉が違っても、通話できます", honor: "さん", sub: "ShotLingua は話した言葉をその場で翻訳します 🌏", open: "アプリで開く", sep: "アプリがまだの人は", codeLabel: "この人の ID をコピー", codeHint: "アプリを入れたら、この ID を入力してね", copied: "コピーしました！", store: "App Store でダウンロード", inApp: "うまく開けない場合は、右上の「…」から「外部ブラウザで開く」を選んでください。"},
     "ko": {titleWith: "님과, 언어가 달라도 통화할 수 있어요", titlePlain: "언어가 달라도 통화할 수 있어요", honor: "", sub: "ShotLingua는 말한 내용을 그 자리에서 번역해 줍니다 🌏", open: "앱에서 열기", sep: "앱이 아직 없다면", codeLabel: "이 사람의 아이디 복사하기", codeHint: "앱을 설치한 뒤 이 아이디를 입력해 주세요", copied: "복사했어요!", store: "App Store에서 다운로드", inApp: "열리지 않으면 오른쪽 위 「…」에서 «외부 브라우저로 열기»를 선택해 주세요."},
@@ -145,127 +148,159 @@
     "nl": {titleWith: " — praat ook zonder gemeenschappelijke taal", titlePlain: "Praat ook zonder gemeenschappelijke taal", honor: "", sub: "ShotLingua vertaalt wat je zegt, meteen 🌏", open: "In de app openen", sep: "Nog geen app?", codeLabel: "ID kopiëren", codeHint: "Installeer de app en voer deze ID in", copied: "Gekopieerd!", store: "Downloaden in de App Store", inApp: "Lukt het niet? Tik rechtsboven op “…” en kies “Openen in browser”."},
     "fa": {titleWith: " — حتی بدون زبان مشترک گفت‌وگو کنید", titlePlain: "حتی بدون زبان مشترک گفت‌وگو کنید", honor: "", sub: "ShotLingua آنچه می‌گویید را همان لحظه ترجمه می‌کند 🌏", open: "باز کردن در برنامه", sep: "هنوز برنامه را ندارید؟", codeLabel: "کپی کردن شناسه او", codeHint: "برنامه را نصب کنید و این شناسه را وارد کنید", copied: "کپی شد!", store: "دانلود از App Store", inApp: "اگر باز نشد، بالا سمت راست «…» را بزنید و «باز کردن در مرورگر» را انتخاب کنید."},
   };
+  var DEMO = {"ja": {"head": "言葉が違っても、仲良くなれます！", "sub": "ShotLingua で試してみよう", "you": "あなた", "michael": "マイケル", "soyeon": "ソヨン", "haruka": "ハルカ", "t1": "久しぶり！最近何してる？", "m1": "このアプリで外国人の友達と電話してるよ〜", "t2": "もう外国語を勉強する必要ないよね笑笑笑笑", "m2": "まじでそれな笑笑"}, "ko": {"head": "언어가 달라도, 친해질 수 있어요!", "sub": "ShotLingua로 시작해 보세요", "you": "나", "michael": "마이클", "soyeon": "소연", "haruka": "하루카", "t1": "오랜만이야! 요즘 뭐 해?", "m1": "이 앱으로 외국인 친구랑 통화하고 있어~", "t2": "이제 외국어 공부 안 해도 되겠네 ㅋㅋㅋㅋ", "m2": "진짜 그니까 ㅋㅋ"}, "en": {"head": "Different languages, still close friends!", "sub": "Try it on ShotLingua", "you": "You", "michael": "Michael", "soyeon": "Soyeon", "haruka": "Haruka", "t1": "Long time no see! What are you up to these days?", "m1": "I'm on calls with friends abroad on this app~", "t2": "Guess we don't need to study languages anymore lol", "m2": "So true lol"}, "zh": {"head": "语言不同，也能成为好朋友！", "sub": "来 ShotLingua 试试", "you": "你", "michael": "Michael", "soyeon": "素妍", "haruka": "春香", "t1": "好久不见！最近在忙什么？", "m1": "在用这个App和外国朋友打电话呢～", "t2": "那都不用学外语了哈哈哈哈", "m2": "真的是哈哈"}, "zh-TW": {"head": "語言不同，也能成為好朋友！", "sub": "來 ShotLingua 試試", "you": "你", "michael": "Michael", "soyeon": "素妍", "haruka": "春香", "t1": "好久不見！最近在忙什麼？", "m1": "在用這個App和外國朋友講電話呢～", "t2": "那都不用學外語了哈哈哈哈", "m2": "真的是哈哈"}, "yue": {"head": "語言唔同，都可以做好朋友！", "sub": "嚟 ShotLingua 試下", "you": "你", "michael": "Michael", "soyeon": "素妍", "haruka": "春香", "t1": "好耐冇見！最近做緊乜嘢？", "m1": "用緊呢個App同外國朋友傾電話～", "t2": "咁都唔使學外語啦哈哈哈哈", "m2": "真係呀哈哈"}, "vi": {"head": "Khác ngôn ngữ vẫn thân nhau được!", "sub": "Thử ngay trên ShotLingua", "you": "Bạn", "michael": "Michael", "soyeon": "Soyeon", "haruka": "Haruka", "t1": "Lâu rồi không gặp! Dạo này bạn làm gì?", "m1": "Mình đang gọi điện với bạn nước ngoài trên app này~", "t2": "Vậy khỏi cần học ngoại ngữ nữa haha", "m2": "Chuẩn luôn haha"}, "th": {"head": "ภาษาต่างกันก็สนิทกันได้!", "sub": "ลองใช้ ShotLingua ดูสิ", "you": "คุณ", "michael": "ไมเคิล", "soyeon": "โซยอน", "haruka": "ฮารุกะ", "t1": "ไม่เจอกันนานเลย! ช่วงนี้ทำอะไรอยู่?", "m1": "กำลังโทรคุยกับเพื่อนต่างชาติผ่านแอปนี้อยู่~", "t2": "งั้นไม่ต้องเรียนภาษาแล้วสิ 5555", "m2": "จริงที่สุด 555"}, "my": {"head": "ဘာသာစကား မတူလည်း ရင်းနှီးနိုင်တယ်!", "sub": "ShotLingua နဲ့ စမ်းကြည့်ပါ", "you": "သင်", "michael": "မိုက်ကယ်", "soyeon": "ဆိုယောင်", "haruka": "ဟာရုကာ", "t1": "မတွေ့တာကြာပြီနော်! အခုဘာလုပ်နေလဲ?", "m1": "ဒီအက်ပ်နဲ့ နိုင်ငံခြားသူငယ်ချင်းတွေနဲ့ ဖုန်းပြောနေတယ်~", "t2": "ဒါဆို ဘာသာစကား သင်စရာမလိုတော့ဘူးပေါ့ ဟားဟား", "m2": "တကယ်ပဲ ဟီး"}, "km": {"head": "ភាសាខុសគ្នា ក៏ស្និទ្ធស្នាលបាន!", "sub": "សាកល្បងលើ ShotLingua", "you": "អ្នក", "michael": "ម៉ៃឃើល", "soyeon": "សូយ៉ុន", "haruka": "ហារូកា", "t1": "យូរហើយមិនបានជួប! ឥឡូវធ្វើអី?", "m1": "ខ្ញុំកំពុងហៅទូរស័ព្ទជាមួយមិត្តបរទេសតាមអេបនេះ~", "t2": "អញ្ចឹងមិនបាច់រៀនភាសាទៀតទេ ហាហា", "m2": "ត្រូវហើយ ហាហា"}, "ms": {"head": "Bahasa berbeza, tetap boleh rapat!", "sub": "Cuba di ShotLingua", "you": "Anda", "michael": "Michael", "soyeon": "Soyeon", "haruka": "Haruka", "t1": "Lama tak jumpa! Buat apa sekarang?", "m1": "Saya tengah call kawan luar negara guna app ni~", "t2": "Tak payah belajar bahasa asing dah la haha", "m2": "Betul tu haha"}, "hi": {"head": "भाषा अलग, फिर भी करीबी दोस्त!", "sub": "ShotLingua पर आज़माएँ", "you": "आप", "michael": "माइकल", "soyeon": "सोयोन", "haruka": "हारुका", "t1": "बहुत दिनों बाद! आजकल क्या कर रहे हो?", "m1": "मैं इस ऐप पर विदेशी दोस्तों से कॉल पर बात कर रहा हूँ~", "t2": "अब तो भाषा सीखने की ज़रूरत ही नहीं lol", "m2": "सच में lol"}, "si": {"head": "භාෂා වෙනස් වුණත් යාළු වෙන්න පුළුවන්!", "sub": "ShotLingua එකෙන් උත්සාහ කරන්න", "you": "ඔබ", "michael": "මයිකල්", "soyeon": "සොයොන්", "haruka": "හරුකා", "t1": "ගොඩක් කාලෙකින්! මේ දවස්වල මොනවද කරන්නේ?", "m1": "මම මේ ඇප් එකෙන් විදේශ යාළුවන්ට කෝල් කරනවා~", "t2": "එහෙනම් දැන් භාෂා ඉගෙන ගන්න ඕන නෑනේ හාහා", "m2": "ඇත්තටම හාහා"}, "ur": {"head": "زبان الگ، پھر بھی قریبی دوست!", "sub": "ShotLingua پر آزمائیں", "you": "آپ", "michael": "مائیکل", "soyeon": "سویون", "haruka": "ہاروکا", "t1": "بہت دنوں بعد! آج کل کیا کر رہے ہو؟", "m1": "میں اس ایپ پر غیر ملکی دوستوں سے کال پر بات کرتا ہوں~", "t2": "تو اب زبان سیکھنے کی ضرورت ہی نہیں lol", "m2": "واقعی lol"}, "mn": {"head": "Хэл өөр ч дотно найз болж чадна!", "sub": "ShotLingua дээр туршаад үз", "you": "Та", "michael": "Майкл", "soyeon": "Сойён", "haruka": "Харука", "t1": "Удаан уулзсангүй! Сүүлийн үед юу хийж байна?", "m1": "Энэ аппаар гадаад найзуудтайгаа ярьж байна~", "t2": "Тэгвэл гадаад хэл сурах хэрэггүй юм байна хаха", "m2": "Үнэхээр тийм хаха"}, "pt-BR": {"head": "Línguas diferentes, mesmo assim amigos próximos!", "sub": "Experimente no ShotLingua", "you": "Você", "michael": "Michael", "soyeon": "Soyeon", "haruka": "Haruka", "t1": "Quanto tempo! O que você anda fazendo?", "m1": "Tô ligando pra amigos de fora por esse app~", "t2": "Então nem precisa mais estudar idioma kkkk", "m2": "Verdade kkk"}, "fr": {"head": "Des langues différentes, mais proches quand même !", "sub": "Essayez sur ShotLingua", "you": "Vous", "michael": "Michael", "soyeon": "Soyeon", "haruka": "Haruka", "t1": "Ça fait longtemps ! Tu fais quoi en ce moment ?", "m1": "J'appelle des amis étrangers avec cette appli~", "t2": "Du coup plus besoin d'apprendre les langues mdr", "m2": "Tellement vrai mdr"}, "ru": {"head": "Разные языки, но всё равно близкие друзья!", "sub": "Попробуйте в ShotLingua", "you": "Вы", "michael": "Майкл", "soyeon": "Соён", "haruka": "Харука", "t1": "Давно не виделись! Чем сейчас занимаешься?", "m1": "Созваниваюсь с друзьями из-за границы в этом приложении~", "t2": "Тогда языки учить больше не надо ахаха", "m2": "Реально ахах"}, "id": {"head": "Beda bahasa, tetap bisa akrab!", "sub": "Coba di ShotLingua", "you": "Kamu", "michael": "Michael", "soyeon": "Soyeon", "haruka": "Haruka", "t1": "Lama nggak ketemu! Lagi sibuk apa sekarang?", "m1": "Lagi teleponan sama teman luar negeri pakai app ini~", "t2": "Berarti nggak perlu belajar bahasa asing lagi wkwk", "m2": "Bener banget wkwk"}, "fil": {"head": "Magkaiba ang wika, malapit pa rin!", "sub": "Subukan sa ShotLingua", "you": "Ikaw", "michael": "Michael", "soyeon": "Soyeon", "haruka": "Haruka", "t1": "Ang tagal nating di nagkita! Ano'ng ginagawa mo ngayon?", "m1": "Tumatawag ako sa mga kaibigan sa ibang bansa gamit ang app na 'to~", "t2": "Di na kailangang mag-aral ng wika haha", "m2": "Sobrang totoo haha"}, "ne": {"head": "भाषा फरक, तर पनि नजिकका साथी!", "sub": "ShotLingua मा प्रयास गर्नुहोस्", "you": "तपाईं", "michael": "माइकल", "soyeon": "सोयोन", "haruka": "हारुका", "t1": "धेरै दिनपछि! आजकल के गर्दै छौ?", "m1": "यो एपबाट विदेशी साथीहरूसँग कल गर्दै छु~", "t2": "अब त भाषा सिक्नै पर्दैन हाहा", "m2": "साँच्चै हो हाहा"}, "es": {"head": "Idiomas distintos, amigos cercanos igual!", "sub": "Pruébalo en ShotLingua", "you": "Tú", "michael": "Michael", "soyeon": "Soyeon", "haruka": "Haruka", "t1": "¡Cuánto tiempo! ¿Qué haces últimamente?", "m1": "Estoy llamando a amigos del extranjero con esta app~", "t2": "Entonces ya no hace falta estudiar idiomas jaja", "m2": "Tal cual jaja"}, "de": {"head": "Verschiedene Sprachen, trotzdem enge Freunde!", "sub": "Probier's auf ShotLingua", "you": "Du", "michael": "Michael", "soyeon": "Soyeon", "haruka": "Haruka", "t1": "Lange nicht gesehen! Was machst du so?", "m1": "Ich telefoniere mit Freunden aus dem Ausland über diese App~", "t2": "Dann muss man ja keine Sprachen mehr lernen haha", "m2": "So wahr haha"}, "nl": {"head": "Andere taal, toch goede vrienden!", "sub": "Probeer het op ShotLingua", "you": "Jij", "michael": "Michael", "soyeon": "Soyeon", "haruka": "Haruka", "t1": "Lang niet gezien! Wat doe je tegenwoordig?", "m1": "Ik bel met vrienden uit het buitenland via deze app~", "t2": "Dan hoef je geen talen meer te leren haha", "m2": "Zo waar haha"}, "fa": {"head": "زبان‌های متفاوت، باز هم دوستان صمیمی!", "sub": "در ShotLingua امتحان کنید", "you": "شما", "michael": "مایکل", "soyeon": "سویون", "haruka": "هاروکا", "t1": "خیلی وقته ندیدمت! این روزا چیکار می‌کنی؟", "m1": "با این اپ با دوستای خارجی تلفنی حرف می‌زنم~", "t2": "پس دیگه لازم نیست زبان بخونیم خخخ", "m2": "واقعاً همینه خخخ"}};
+  var PARTNER = {"en": {"p1": "Long time no see! What are you up to these days?", "p2": "Guess we don't need to study languages anymore lol"}, "ja": {"p1": "久しぶり！最近何してる？", "p2": "もう外国語を勉強する必要ないよね笑笑笑笑"}, "ko": {"p1": "오랜만이야! 요즘 뭐 해?", "p2": "이제 외국어 공부 안 해도 되겠네 ㅋㅋㅋㅋ"}};
 
-  // ⚠️ STRINGS は **必ず言語判定より前** に置くこと。`var` は宣言だけ巻き上げて
-  //  代入は巻き上げないため、下の判定内 `STRINGS[base]` が undefined を触って
-  //  TypeError で **スクリプト全体が停止** する (名前もIDのコピー欄も出なくなる)。
-  // 端末言語 → 表示言語。zh-TW / pt-BR のように地域まで見ないと別言語になるものが
-  // あるので、まず完全一致、次に主言語、最後に英語の順で解決する。
   var raw = (navigator.language || "en").toLowerCase();
   var lang = (function () {
-    var exact = { "zh-tw": "zh-TW", "zh-hant": "zh-TW", "zh-hk": "yue",
-                  "pt-br": "pt-BR", "pt": "pt-BR", "tl": "fil" };
+    var exact = { "zh-tw": "zh-TW", "zh-hant": "zh-TW", "zh-hk": "yue", "pt-br": "pt-BR", "pt": "pt-BR", "tl": "fil" };
     if (exact[raw]) return exact[raw];
     var base = raw.split("-")[0];
     if (exact[base]) return exact[base];
     if (base === "zh") return raw.indexOf("hant") >= 0 ? "zh-TW" : "zh";
     return STRINGS[base] ? base : "en";
   })();
-  // アラビア文字系は右から左へ。ここを入れないと句読点と記号が行末で乱れる。
   if (lang === "ur" || lang === "fa") document.documentElement.setAttribute("dir", "rtl");
   document.documentElement.setAttribute("lang", lang);
-
   var T = STRINGS[lang] || STRINGS.en;
-
+  var W = DEMO[lang] || DEMO.en;
   var $ = function (elId) { return document.getElementById(elId); };
 
-  $("title").innerHTML = name
-    ? '<span class="who">' + escapeHtml(name) + T.honor + "</span>" + T.titleWith
-    : T.titlePlain;
+  $("title").textContent = W.head;
+  $("sub").textContent = W.sub;
+  if (name) { $("inviter").style.display = "flex"; $("who").textContent = name + (T.honor || ""); }
   if (uname) $("uname").textContent = "@" + uname;
-  $("sub").textContent      = T.sub;
   $("openApp").textContent  = T.open;
   $("sepText").textContent  = T.sep;
   $("codeLabel").textContent = T.codeLabel;
   $("codeHint").textContent  = T.codeHint;
   $("store").textContent     = T.store;
+  $("wmSub").textContent = ({ja:"翻訳通話",ko:"번역 통화",zh:"翻译通话","zh-TW":"翻譯通話",yue:"翻譯通話"})[lang] || "Translated call";
 
-  // --- ID 欄 (ID がリンクに乗っている時だけ出す) ---
   if (validCode) {
     $("codeWrap").style.display = "block";
     $("codeText").textContent = "@" + code;
     $("codePill").addEventListener("click", function () {
       copyText("@" + code, function () {
         var hint = $("codeHint");
-        hint.textContent = T.copied;
-        hint.classList.add("copied");
-        setTimeout(function () {
-          hint.textContent = T.codeHint;
-          hint.classList.remove("copied");
-        }, 1800);
+        hint.textContent = T.copied; hint.classList.add("copied");
+        setTimeout(function () { hint.textContent = T.codeHint; hint.classList.remove("copied"); }, 1800);
       });
     });
   }
+  // QR = このページの URL(別の端末で読めるように)。
+  if (id && window.QRCode) {
+    try { $("qrWrap").style.display = "block";
+          new QRCode($("qrWrap"), { text: location.href, width: 148, height: 148, correctLevel: QRCode.CorrectLevel.M }); } catch (e) {}
+  }
 
-  // --- アプリを開く / App Store (Google Play は Android 版が無いので載せない) ---
-  // 【アトリビューション】友達追加(id) に加えて **流入元パラメータも全部アプリへ引き継ぐ**。
-  // アプリ側 AttributionManager.handle が source/channel/campaign/invite_code/inviter_* を解析する。
-  // これが無いと、インストールが招待経由なのか App Store 検索なのか区別できない
-  // (実測: first_open_attributed は 122 件すべて organic_or_unknown だった)。
-  // ⚠️ サイト側リポジトリ (-shotlingua-site) の未コミット実装を移植したもの。消さないこと。
+  // --- アプリを開く / App Store。流入元パラメータは全部アプリへ引き継ぐ(AttributionManager.handle が読む)。 ---
   var fwd = [];
   function addParam(k, v) { v = (v || "").trim(); if (v) fwd.push(encodeURIComponent(k) + "=" + encodeURIComponent(v)); }
-  addParam("id", id);
-  addParam("u", uname);
-  ["source", "channel", "campaign", "invite_code", "inviter_user_id", "inviter_username"].forEach(function (k) {
-    addParam(k, params.get(k));
-  });
-  // inviter_user_id が未指定なら、招待リンクの id を招待主として渡す (旧リンク互換)。
+  addParam("id", id); addParam("u", uname);
+  ["source", "channel", "campaign", "invite_code", "inviter_user_id", "inviter_username"].forEach(function (k) { addParam(k, params.get(k)); });
   if (id && !params.get("inviter_user_id")) addParam("inviter_user_id", id);
-  // 明示 source が無い招待リンクは friend_invite とみなす。
   if (!params.get("source")) addParam("source", "friend_invite");
   var appURL = fwd.length ? ("shotlingua://add?" + fwd.join("&")) : "shotlingua://";
   var storeURL = "https://apps.apple.com/app/id6760792510";
   $("openApp").setAttribute("href", appURL);
-
-  var ua    = navigator.userAgent || "";
+  var ua = navigator.userAgent || "";
   var inApp = /Instagram|FBAN|FBAV|Line\//i.test(ua);
   var isIOS = /iPhone|iPad|iPod/i.test(ua);
-
-  // Instagram/LINE 等の in-app ブラウザはカスタムスキーム遷移を抑制しがち。
   if (inApp) $("hint").textContent = T.inApp;
-
   $("openApp").addEventListener("click", tryOpenApp);
-  // 【重要】コードがある時は自動遷移しない。未インストールの人を勝手に App Store へ
-  // 飛ばすと、**コードをコピーする前にページを離れてしまう**。インストールを挟むと
-  // URL は失われるので、そこでコードを取り逃すと二度と紐付かない。
+  // コードがある時は自動遷移しない(コピーする前にページを離れさせない)。
   if (isIOS && !inApp && id && !validCode) setTimeout(tryOpenApp, 350);
-
   function tryOpenApp(e) {
     if (e) e.preventDefault();
     var start = Date.now();
-    var t = setTimeout(function () {
-      if (Date.now() - start < 1600) location.href = storeURL;
-    }, 1200);
+    var t = setTimeout(function () { if (Date.now() - start < 1600) location.href = storeURL; }, 1200);
     window.location.href = appURL;
     window.addEventListener("pagehide", function () { clearTimeout(t); });
   }
-
-  // navigator.clipboard は非 https / 古い in-app ブラウザで落ちるので必ず退避策を持つ。
   function copyText(text, done) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(done, function () { legacyCopy(text, done); });
-    } else {
-      legacyCopy(text, done);
-    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () { legacyCopy(text, done); });
+    else legacyCopy(text, done);
   }
   function legacyCopy(text, done) {
-    var ta = document.createElement("textarea");
-    ta.value = text;
-    ta.setAttribute("readonly", "");
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand("copy"); done(); } catch (err) { /* 失敗しても文字は見えている */ }
+    var ta = document.createElement("textarea"); ta.value = text; ta.setAttribute("readonly", "");
+    ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); done(); } catch (err) {}
     document.body.removeChild(ta);
   }
 
-  function escapeHtml(s) {
-    return s.replace(/[&<>"']/g, function (c) {
-      return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c];
-    });
+  // ===== デモ(CallDemoScript と同じ台本を 14 秒でループ) =====
+  var fb = (lang === "ja" || lang === "ko") ? lang : "en";
+  var partnerLang = fb === "en" ? "ja" : "en";               // 見る人が英語なら相手は日本語で話す
+  var partnerIsSoyeon = partnerLang !== "en";                 // 日本語で話す相手はハルカ(ソヨンの顔)
+  var P = PARTNER[partnerLang];
+  var partnerName = partnerIsSoyeon ? W.haruka : W.michael;
+  var partnerImg = partnerIsSoyeon ? "demo-soyeon.jpg" : "demo-michael.jpg";
+  var partnerCode = partnerLang.toUpperCase(), myCode = lang.slice(0,2).toUpperCase();
+  var ME = "me", PA = "pa";
+  function chunks(s) { if (s.indexOf(" ") >= 0) return s.split(" ").map(function (w) { return w + " "; }); var o = [], c = ""; for (var i = 0; i < s.length; i++) { c += s[i]; if (c.length >= 2) { o.push(c); c = ""; } } if (c) o.push(c); return o; }
+  var LEN = 14;
+  var ev = [];
+  function E(t, k, v) { ev.push({t:t, k:k, v:v}); }
+  E(0.30, "spk", PA); E(0.30, "line", {id:"p1", uid:PA, text:P.p1}); E(1.80, "tr", {id:"p1", text:W.t1});
+  E(4.60, "spk", ME);
+  var m1c = chunks(W.m1); for (var i = 0; i < m1c.length; i++) E(4.60 + 1.3 * (i + 1) / m1c.length, "vol", m1c.slice(0, i + 1).join(""));
+  E(6.00, "vol", ""); E(6.00, "line", {id:"m1", uid:ME, text:W.m1});
+  E(7.40, "spk", PA); E(7.40, "line", {id:"p2", uid:PA, text:P.p2}); E(8.90, "tr", {id:"p2", text:W.t2});
+  E(11.60, "spk", ME);
+  var m2c = chunks(W.m2); for (var j = 0; j < m2c.length; j++) E(11.60 + 1.0 * (j + 1) / m2c.length, "vol", m2c.slice(0, j + 1).join(""));
+  E(12.70, "vol", ""); E(12.70, "line", {id:"m2", uid:ME, text:W.m2});
+  var speaking = [[0.30,1.70,PA],[4.60,5.95,ME],[7.40,8.80,PA],[11.60,12.65,ME]];
+  function level(t, uid) { var best = 0; for (var s = 0; s < speaking.length; s++) { var r = speaking[s]; if (r[2] !== uid || t < r[0] || t > r[1]) continue; var env = Math.min(1, (t - r[0]) / .25) * Math.min(1, (r[1] - t) / .3 + .2); var w = .55 + .45 * Math.abs(Math.sin(t * 34) * Math.cos(t * 12)); best = Math.max(best, env * w); } return best; }
+  function state(t) {
+    var st = {spk:PA, prev:null, changedAt:-10, lines:[], order:[], tr:{}, vol:"", lineAt:{}};
+    for (var i = 0; i < ev.length; i++) { var e = ev[i]; if (e.t > t) continue;
+      if (e.k === "line") { st.lines.push(e.v); st.lineAt[e.v.id] = e.t; }
+      else if (e.k === "tr") st.tr[e.v.id] = {text:e.v.text, at:e.t};
+      else if (e.k === "vol") st.vol = e.v;
+      else if (e.k === "spk" && st.spk !== e.v) { st.prev = st.spk; st.spk = e.v; st.changedAt = e.t; } }
+    st.lines = st.lines.slice(-2); st.level = level(t, st.spk); return st;
   }
+  function easeOutBack(x) { var c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); }
+  function blobPath(phase, amp, seed, R) { var pts = []; for (var i = 0; i < 72; i++) { var th = i / 72 * Math.PI * 2; var r = R * (1 + amp * Math.sin(3 * th + phase + seed) + amp * .7 * Math.sin(5 * th - 1.3 * phase + seed * 2)); pts.push([95 + r * Math.cos(th), 95 + r * Math.sin(th)]); } var d = "M" + pts[0][0].toFixed(1) + " " + pts[0][1].toFixed(1); for (var k = 1; k < pts.length; k++) d += "L" + pts[k][0].toFixed(1) + " " + pts[k][1].toFixed(1); return d + "Z"; }
+  var colors = {me:["#1FA398","#7FE3CB"], pa:[partnerIsSoyeon ? "#6C4DF5" : "#E8604C", partnerIsSoyeon ? "#B9A8FF" : "#FFB3A6"]};
+  var imgs = {me:"demo-me.jpg", pa:partnerImg}, names = {me:W.you, pa:partnerName}, codes = {me:myCode, pa:partnerCode};
+  var stage = $("stage"), cards = $("cards"), lastKey = "";
+  function fit() { var w = stage.parentNode.clientWidth, k = Math.min(w, 430) / 390; stage.style.transform = "scale(" + k + ")"; stage.style.left = ((w - 390 * k) / 2) + "px"; stage.parentNode.style.height = Math.round(600 * k) + "px"; }
+  fit(); window.addEventListener("resize", fit);
+  var t0 = performance.now();
+  function frame(now) {
+    var t = ((now - t0) / 1000) % LEN, st = state(t);
+    var col = colors[st.spk][0], colL = colors[st.spk][1];
+    var p = Math.min(1, Math.max(0, (t - st.changedAt) / .5)), sc = .6 + .4 * easeOutBack(p);
+    var amp = .035 + .16 * st.level;
+    $("blobA").setAttribute("d", blobPath(t * 1.1, amp, 0, 95 * sc)); $("blobA").setAttribute("fill", col); $("blobA").setAttribute("opacity", (.35 + .15 * st.level) * Math.min(1, p / .35));
+    $("blobB").setAttribute("d", blobPath(-t * .9, amp * .85, 1.7, 78 * sc)); $("blobB").setAttribute("fill", col); $("blobB").setAttribute("opacity", (.55 + .15 * st.level) * Math.min(1, p / .35));
+    $("glow").style.background = col; $("glow2").style.background = col;
+    var lis = st.spk === ME ? PA : ME;
+    var key = st.spk + "|" + st.lines.map(function (l) { return l.id; }).join(",") + "|" + Object.keys(st.tr).length + "|" + st.vol;
+    if (key !== lastKey) { lastKey = key;
+      $("speakerImg").src = imgs[st.spk]; $("spkName").textContent = names[st.spk] + " · " + codes[st.spk]; $("spkLabel").style.color = colL;
+      $("listenerImg").src = imgs[lis]; $("listenerName").textContent = names[lis] + " · " + codes[lis]; $("listenerName").style.color = colors[lis][1];
+      var h = "";
+      for (var i = 0; i < st.lines.length; i++) { var l = st.lines[i], latest = i === st.lines.length - 1, c = colors[l.uid];
+        var since = t - st.lineAt[l.id], cs = chunks(l.text), reveal = (latest && l.uid === PA && since < cs.length * .06 + .2) ? Math.min(cs.length, Math.floor(since / .06)) : -1;
+        var txt = ""; for (var k = 0; k < cs.length; k++) { var cls = reveal < 0 || k < reveal ? "k0" : (k === reveal ? "k1" : "k2"); txt += '<span class="' + cls + '"' + (cls === "k1" ? ' style="background:' + c[0] + '73"' : "") + '>' + esc(cs[k]) + '</span>'; }
+        var tr = st.tr[l.id]; var trHtml = tr ? '<div class="tr ' + ((t - tr.at) > .02 ? "on" : "") + '" style="border-color:' + c[0] + '">' + esc(tr.text) + '</div>' : "";
+        h += '<div class="card' + (latest ? "" : " dim") + '"><div class="who" style="color:' + c[1] + '"><i style="background:' + c[0] + '"></i>' + esc(names[l.uid]) + '</div><div class="txt">' + txt + '</div>' + trHtml + '</div>'; }
+      if (st.vol) { var vc = chunks(st.vol), vt = ""; for (var q = 0; q < vc.length; q++) vt += '<span class="' + (q < vc.length - 1 ? "k0" : "k1") + '"' + (q === vc.length - 1 ? ' style="background:#1FA39873"' : "") + '>' + esc(vc[q]) + '</span>';
+        h += '<div class="card volatile"><div class="who" style="color:#7FE3CB"><i style="background:#1FA398"></i>' + esc(W.you) + '</div><div class="txt">' + vt + '</div></div>'; }
+      cards.innerHTML = h;
+      var trs = cards.querySelectorAll(".tr:not(.on)"); if (trs.length) requestAnimationFrame(function () { for (var z = 0; z < trs.length; z++) trs[z].classList.add("on"); });
+    } else {
+      // 途中経過だけ差し替える(カラオケの進み)
+      var latestCard = cards.querySelector(".card:not(.dim):not(.volatile)"); if (latestCard && st.lines.length) { var l2 = st.lines[st.lines.length - 1]; if (l2.uid === PA) { var since2 = t - st.lineAt[l2.id], cs2 = chunks(l2.text); var rev2 = since2 < cs2.length * .06 + .2 ? Math.min(cs2.length, Math.floor(since2 / .06)) : -1; var spans = latestCard.querySelectorAll(".txt span"); for (var y = 0; y < spans.length; y++) { var cls2 = rev2 < 0 || y < rev2 ? "k0" : (y === rev2 ? "k1" : "k2"); if (spans[y].className !== cls2) { spans[y].className = cls2; spans[y].style.background = cls2 === "k1" ? colors[PA][0] + "73" : ""; } } } }
+    }
+    var bars = $("bars").children; for (var b = 0; b < 3; b++) { bars[b].style.height = (4 + 8 * Math.abs(Math.sin(t * 6 + b)) * (.4 + .6 * st.level)) + "px"; bars[b].style.background = colL; }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]; }); }
 })();
 </script>
 </body>
