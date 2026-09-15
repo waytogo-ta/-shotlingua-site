@@ -77,8 +77,10 @@
   .f2f video { width:100%; height:100%; object-fit:cover; display:block; }
   .langRow { position:absolute; left:14px; right:14px; bottom:16px; display:flex; align-items:flex-start; gap:10px; }
   .langCol { flex:1; text-align:center; }
-  .langPill2 { height:46px; border-radius:23px; display:flex; align-items:center; justify-content:center; gap:6px; font-size:16px; font-weight:600; color:#fff; background:rgba(20,18,26,.55); border:1px solid rgba(255,255,255,.3); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
-  .langPill2::after { content:"⌄"; font-size:14px; opacity:.8; margin-top:-6px; }
+  /* ⚠️ iOS Safari で文字が1字ずつ縦に折れた(flex の匿名アイテムが幅0に縮む)。span に入れて nowrap、縮ませない。 */
+  .langPill2 { height:46px; border-radius:23px; display:flex; align-items:center; justify-content:center; gap:6px; font-size:16px; font-weight:600; color:#fff; background:rgba(20,18,26,.55); border:1px solid rgba(255,255,255,.3); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); white-space:nowrap; padding:0 14px; }
+  .langPill2 span { flex:0 0 auto; white-space:nowrap; }
+  .langPill2::after { content:"⌄"; flex:0 0 auto; font-size:14px; opacity:.8; margin-top:-6px; }
   .langCap { font-size:11.5px; color:rgba(255,255,255,.75); margin-top:8px; }
   .swap { width:30px; height:46px; display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; }
   .conv { position:absolute; left:14px; right:14px; bottom:112px; display:flex; flex-direction:column; gap:10px; }   /* 言語の段の上。顔は隠れない */
@@ -326,7 +328,8 @@
       {partner:true,  flag:"🇯🇵", said:"え、私も！今度一緒にラーメン行こう！", spoken:"No way, me too! Let's grab ramen sometime!"}
     ];
     var LN = {"ja": ["日本語", "英語", "あなたの言語", "相手の言語"], "ko": ["일본어", "영어", "내 언어", "상대의 언어"], "en": ["Japanese", "English", "Your language", "Their language"], "zh": ["日语", "英语", "你的语言", "对方的语言"], "zh-TW": ["日語", "英語", "你的語言", "對方的語言"], "yue": ["日文", "英文", "你嘅語言", "對方嘅語言"], "vi": ["Tiếng Nhật", "Tiếng Anh", "Ngôn ngữ của bạn", "Ngôn ngữ của họ"], "th": ["ญี่ปุ่น", "อังกฤษ", "ภาษาของคุณ", "ภาษาของอีกฝ่าย"], "my": ["ဂျပန်", "အင်္ဂလိပ်", "သင့်ဘာသာစကား", "တစ်ဖက်၏ ဘာသာစကား"], "km": ["ជប៉ុន", "អង់គ្លេស", "ភាសារបស់អ្នក", "ភាសារបស់គេ"], "ms": ["Jepun", "Inggeris", "Bahasa anda", "Bahasa mereka"], "hi": ["जापानी", "अंग्रेज़ी", "आपकी भाषा", "उनकी भाषा"], "si": ["ජපන්", "ඉංග්‍රීසි", "ඔබේ භාෂාව", "ඔවුන්ගේ භාෂාව"], "ur": ["جاپانی", "انگریزی", "آپ کی زبان", "ان کی زبان"], "mn": ["Япон", "Англи", "Таны хэл", "Тэдний хэл"], "pt-BR": ["Japonês", "Inglês", "Seu idioma", "Idioma da pessoa"], "fr": ["Japonais", "Anglais", "Votre langue", "Sa langue"], "ru": ["Японский", "Английский", "Ваш язык", "Язык собеседника"], "id": ["Jepang", "Inggris", "Bahasamu", "Bahasa mereka"], "fil": ["Japanese", "English", "Wika mo", "Wika nila"], "ne": ["जापानी", "अंग्रेजी", "तपाईंको भाषा", "उनको भाषा"], "es": ["Japonés", "Inglés", "Tu idioma", "Su idioma"], "de": ["Japanisch", "Englisch", "Deine Sprache", "Ihre Sprache"], "nl": ["Japans", "Engels", "Jouw taal", "Hun taal"], "fa": ["ژاپنی", "انگلیسی", "زبان شما", "زبان طرف مقابل"]}; var R = LN[lang] || LN.en;   // [日本語, 英語, あなたの言語, 相手の言語]
-    $("langMine").textContent = R[0]; $("langTheirs").textContent = R[1]; $("capMine").textContent = R[2]; $("capTheirs").textContent = R[3];
+    $("langMine").innerHTML = "<span>" + esc(R[0]) + "</span>"; $("langTheirs").innerHTML = "<span>" + esc(R[1]) + "</span>";
+    $("capMine").textContent = R[2]; $("capTheirs").textContent = R[3];
     var conv = $("conv");
     function bubble(l) {
       var d = document.createElement("div"); d.className = "bub " + (l.partner ? "them" : "me"); d.setAttribute("data-stage", "0");
