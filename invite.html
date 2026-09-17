@@ -37,7 +37,16 @@
   .listener { position:absolute; left:274px; top:160px; width:76px; text-align:center; }
   .listener img { width:76px; height:76px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,.45); box-shadow:0 6px 12px rgba(0,0,0,.4); transition:transform .5s cubic-bezier(.34,1.56,.64,1); }
   .listener div { font-size:11px; letter-spacing:.06em; margin-top:6px; }
-  .cards { text-align:left; position:absolute; left:20px; right:20px; top:300px; height:370px; overflow:hidden; }
+  .sky { position:absolute; inset:0; background:linear-gradient(#141238, #1C1A4A 45%, #2A1E5C 80%, #10101A); }
+  .globe { position:absolute; left:0; top:28px; }
+  .pin { position:absolute; width:62px; margin-left:-31px; text-align:center; transition:transform .4s cubic-bezier(.34,1.56,.64,1); }
+  .pin .ring { width:62px; height:62px; border-radius:50%; padding:4px; box-shadow:0 8px 18px rgba(0,0,0,.35); position:relative; }
+  .pin .ring::after { content:""; position:absolute; left:50%; bottom:-9px; margin-left:-8px; border:8px solid transparent; border-bottom:0; border-top-color:inherit; }
+  .pin img { width:54px; height:54px; border-radius:50%; object-fit:cover; display:block; border:2px solid #fff; }
+  .pin .chip { display:inline-block; margin-top:12px; padding:3px 9px; border-radius:10px; font-size:9.5px; font-weight:700; letter-spacing:.08em; white-space:nowrap; color:#fff; }
+  .spark { position:absolute; max-width:210px; padding:7px 12px; border-radius:16px; background:#fff; color:#17131F; font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-shadow:0 8px 20px rgba(0,0,0,.3); opacity:0; transform:scale(.7); transition:opacity .35s, transform .35s cubic-bezier(.34,1.56,.64,1); }
+  .spark.on { opacity:1; transform:none; }
+  .cards { text-align:left; position:absolute; left:20px; right:20px; top:396px; height:270px; overflow:hidden; }
   .cardsInner { display:flex; flex-direction:column; gap:10px; transition:transform .5s ease; will-change:transform; }
   .card { padding:13px 16px 14px; border-radius:24px; background:linear-gradient(rgba(255,255,255,.20),rgba(255,255,255,.10)); border:1px solid rgba(255,255,255,.36); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
   .card.dim { opacity:.7; }
@@ -72,7 +81,7 @@
   .feat p { color:var(--sub); font-size:14.5px; line-height:1.7; margin:0 auto 18px; max-width:340px; }
   .stageWrap { position:relative; width:100%; height:600px; overflow:hidden; border-radius:28px; }   /* 高さは JS が幅から決める */
   .stage { position:absolute; left:0; top:0; width:390px; height:693px; transform-origin:0 0; overflow:hidden; }
-  .fade { position:absolute; left:0; right:0; bottom:0; height:22%; background:linear-gradient(rgba(14,13,18,0), var(--bg) 85%); pointer-events:none; }
+  .fade { position:absolute; left:0; right:0; bottom:0; height:8%; background:linear-gradient(rgba(14,13,18,0), var(--bg) 85%); pointer-events:none; }
   .f2f { position:relative; width:100%; border-radius:28px; overflow:hidden; aspect-ratio:9/16; max-height:560px; background:#000; }
   .f2f video { width:100%; height:100%; object-fit:cover; display:block; }
   .langRow { position:absolute; left:14px; right:14px; bottom:16px; display:flex; align-items:flex-start; gap:10px; }
@@ -141,12 +150,25 @@
     <p id="s1c"></p>
     <div class="stageWrap">
       <div class="stage" id="stage">
-        <div class="mesh"><div class="glow" id="glow"></div><div class="glow2" id="glow2"></div></div>
+        <!-- 【2026-09-17】アプリの通話画面「同じ地球」と同じ見た目: 夜空・地球・2人のピン・電波・都市と現地時刻 -->
+        <div class="sky"></div>
         <div class="wordmark"><img src="appicon.png" alt="" /><b><em>ShotL</em>ingua</b><span id="wmSub"></span></div>
-        <svg class="blob" viewBox="0 0 190 190"><path id="blobA" fill="rgba(108,77,245,.45)"/><path id="blobB" fill="rgba(108,77,245,.65)"/></svg>
-        <img class="speaker" id="speakerImg" src="demo-michael.jpg" alt="" />
-        <div class="spkLabel" id="spkLabel"><span class="bars" id="bars"><i></i><i></i><i></i></span><span id="spkName"></span></div>
-        <div class="listener" id="listener"><img id="listenerImg" src="demo-me.jpg" alt="" /><div id="listenerName"></div></div>
+        <svg id="globe" class="globe" width="390" height="380" viewBox="0 0 390 380">
+          <defs>
+            <radialGradient id="ocean" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#5A73E6"/><stop offset=".6" stop-color="#3547B8"/><stop offset="1" stop-color="#1F2A7A"/></radialGradient>
+            <radialGradient id="halo" cx="50%" cy="50%" r="50%"><stop offset=".78" stop-color="rgba(255,255,255,.55)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient>
+            <radialGradient id="shine" cx="35%" cy="28%" r="60%"><stop offset="0" stop-color="rgba(255,255,255,.28)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient>
+            <clipPath id="gclip"><circle cx="195" cy="196" r="140"/></clipPath>
+          </defs>
+          <circle cx="195" cy="196" r="168" fill="url(#halo)"/>
+          <circle cx="195" cy="196" r="140" fill="url(#ocean)"/>
+          <g clip-path="url(#gclip)"><path id="land" fill="#6FA487" stroke="#9FD1B1" stroke-width=".6"/><path id="night" fill="rgba(12,10,48,.42)"/></g>
+          <circle cx="195" cy="196" r="140" fill="url(#shine)"/>
+          <path id="arc" fill="none" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 10"/>
+        </svg>
+        <div class="pin" id="pinMe"><div class="ring"><img src="demo-me.jpg" alt="" /></div><div class="chip"></div></div>
+        <div class="pin" id="pinPa"><div class="ring"><img alt="" /></div><div class="chip"></div></div>
+        <div class="spark" id="spark"></div>
         <div class="cards" id="cards"></div>
       </div>
       <div class="fade"></div>
@@ -183,6 +205,9 @@
   </section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
 <script>
 (function () {
   var params = new URLSearchParams(location.search);
@@ -397,24 +422,68 @@
   function blobPath(phase, amp, seed, R) { var pts = []; for (var i = 0; i < 72; i++) { var th = i / 72 * Math.PI * 2; var r = R * (1 + amp * Math.sin(3 * th + phase + seed) + amp * .7 * Math.sin(5 * th - 1.3 * phase + seed * 2)); pts.push([95 + r * Math.cos(th), 95 + r * Math.sin(th)]); } var d = "M" + pts[0][0].toFixed(1) + " " + pts[0][1].toFixed(1); for (var k = 1; k < pts.length; k++) d += "L" + pts[k][0].toFixed(1) + " " + pts[k][1].toFixed(1); return d + "Z"; }
   var colors = {me:["#1FA398","#7FE3CB"], pa:[partnerIsSoyeon ? "#6C4DF5" : "#E8604C", partnerIsSoyeon ? "#B9A8FF" : "#FFB3A6"]};
   var imgs = {me:"demo-me.jpg", pa:partnerImg}, names = {me:W.you, pa:partnerName}, codes = {me:myCode, pa:partnerCode};
+  // ===== 同じ地球(アプリの CallEarthGeo と同じ: 話す言語の代表都市・現地時刻・昼夜) =====
+  var CITY = {ja:["TOKYO",139.69,35.68,"Asia/Tokyo"], ko:["SEOUL",126.98,37.57,"Asia/Seoul"], en:["LOS ANGELES",-118.24,34.05,"America/Los_Angeles"],
+    zh:["BEIJING",116.40,39.90,"Asia/Shanghai"], "zh-TW":["TAIPEI",121.56,25.03,"Asia/Taipei"], yue:["HONG KONG",114.17,22.32,"Asia/Hong_Kong"],
+    vi:["HANOI",105.85,21.03,"Asia/Ho_Chi_Minh"], th:["BANGKOK",100.50,13.76,"Asia/Bangkok"], my:["YANGON",96.16,16.87,"Asia/Yangon"], km:["PHNOM PENH",104.92,11.56,"Asia/Phnom_Penh"],
+    ms:["KUALA LUMPUR",101.69,3.14,"Asia/Kuala_Lumpur"], id:["JAKARTA",106.85,-6.21,"Asia/Jakarta"], fil:["MANILA",120.98,14.60,"Asia/Manila"], hi:["NEW DELHI",77.21,28.61,"Asia/Kolkata"],
+    ne:["KATHMANDU",85.32,27.72,"Asia/Kathmandu"], si:["COLOMBO",79.86,6.93,"Asia/Colombo"], ur:["ISLAMABAD",73.05,33.68,"Asia/Karachi"], fa:["TEHRAN",51.39,35.69,"Asia/Tehran"],
+    mn:["ULAANBAATAR",106.92,47.92,"Asia/Ulaanbaatar"], ru:["MOSCOW",37.62,55.75,"Europe/Moscow"], fr:["PARIS",2.35,48.86,"Europe/Paris"], de:["BERLIN",13.40,52.52,"Europe/Berlin"],
+    nl:["AMSTERDAM",4.90,52.37,"Europe/Amsterdam"], es:["MADRID",-3.70,40.42,"Europe/Madrid"], "pt-BR":["SÃO PAULO",-46.63,-23.55,"America/Sao_Paulo"]};
+  var cityOf = {me: CITY[lang] || CITY.en, pa: CITY[partnerLang] || CITY.en};
+  if (cityOf.me === cityOf.pa) cityOf.pa = CITY.ja === cityOf.me ? CITY.en : CITY.ja;
+  var proj = null, geoPath = null, landGeo = null;
+  function localTime(c) { try { return new Intl.DateTimeFormat("en-GB", {hour:"2-digit", minute:"2-digit", timeZone:c[3]}).format(new Date()); } catch (e) { return ""; } }
+  function setupEarth() {
+    if (!window.d3 || !d3.geoOrthographic) return;
+    var mid = d3.geoInterpolate([cityOf.me[1], cityOf.me[2]], [cityOf.pa[1], cityOf.pa[2]])(.5);
+    var dist = d3.geoDistance([cityOf.me[1], cityOf.me[2]], [cityOf.pa[1], cityOf.pa[2]]);
+    proj = d3.geoOrthographic().translate([195, 196]).scale(140).clipAngle(90).rotate([-mid[0], -mid[1] * .7 + (dist > 1.6 ? 0 : 8)]);
+    geoPath = d3.geoPath(proj);
+    // 昼夜: 太陽の真下の反対側を中心に半径90°の円を夜として塗る
+    var now = new Date(), doy = Math.floor((now - new Date(now.getUTCFullYear(), 0, 0)) / 864e5);
+    var sunLon = -((now.getUTCHours() + now.getUTCMinutes() / 60) - 12) * 15, sunLat = 23.44 * Math.sin(2 * Math.PI * (doy - 81) / 365);
+    $("night").setAttribute("d", geoPath(d3.geoCircle().center([sunLon + 180, -sunLat]).radius(90)()) || "");
+    fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/land-110m.json").then(function (r) { return r.json(); }).then(function (topo) {
+      landGeo = topojson.feature(topo, topo.objects.land); $("land").setAttribute("d", geoPath(landGeo) || "");
+    }).catch(function () {});
+    ["me", "pa"].forEach(function (k) {
+      var el = $(k === "me" ? "pinMe" : "pinPa"), c = cityOf[k], xy = proj([c[1], c[2]]) || [195, 196];
+      el.style.left = Math.max(56, Math.min(334, xy[0])) + "px"; el.style.top = (28 + xy[1] - 80) + "px";
+      el.querySelector(".ring").style.background = colors[k][0]; el.querySelector(".ring").style.borderTopColor = colors[k][0];
+      var chip = el.querySelector(".chip"); chip.textContent = c[0] + "  " + localTime(c); chip.style.background = colors[k][0];
+      if (k === "pa") el.querySelector("img").src = partnerImg;
+    });
+  }
+  function pinXY(k) { var c = cityOf[k], xy = proj ? proj([c[1], c[2]]) : null; return xy ? [Math.max(56, Math.min(334, xy[0])), 28 + xy[1] - 22] : [195, 196]; }
+  function earth(t, st) {
+    if (!proj) return;
+    var from = pinXY(st.spk), to = pinXY(st.spk === ME ? PA : ME);
+    var mx = (from[0] + to[0]) / 2, my = Math.min(from[1], to[1]) - 70;
+    $("arc").setAttribute("d", "M" + from[0] + " " + (from[1] - 40) + " Q" + mx + " " + (my - 40) + " " + to[0] + " " + (to[1] - 40));
+    $("arc").setAttribute("stroke", colors[st.spk][1]); $("arc").setAttribute("stroke-dashoffset", String(-t * 30));
+    $("pinMe").style.transform = "scale(" + (st.spk === ME ? 1 + .08 * st.level : 1) + ")";
+    $("pinPa").style.transform = "scale(" + (st.spk === PA ? 1 + .08 * st.level : 1) + ")";
+    var last = st.lines[st.lines.length - 1], spark = $("spark");
+    if (last && t - st.lineAt[last.id] < 3.2) {
+      var txt = last.text.length > 18 ? last.text.slice(0, 17) + "…" : last.text;
+      if (spark.textContent !== txt) spark.textContent = txt;
+      var sp = pinXY(last.uid); spark.style.left = Math.max(12, Math.min(390 - 222, sp[0] - 40)) + "px"; spark.style.top = (sp[1] - 104) + "px";
+      spark.classList.add("on");
+    } else spark.classList.remove("on");
+  }
   var stage = $("stage"), cards = $("cards"), lastKey = "", scrollOff = 0;
   function fit() { var w = stage.parentNode.clientWidth, k = Math.min(w, 430) / 390; stage.style.transform = "scale(" + k + ")"; stage.style.left = ((w - 390 * k) / 2) + "px"; stage.parentNode.style.height = Math.round(693 * k) + "px"; }
-  fit(); window.addEventListener("resize", fit);
+  fit(); window.addEventListener("resize", fit); setupEarth();
   var t0 = performance.now();
   function frame(now) {
     var t = ((now - t0) / 1000) % LEN, st = state(t);
     if (t < 0.3 && scrollOff !== 0 && !st.lines.length) { scrollOff = 0; }
-    var col = colors[st.spk][0], colL = colors[st.spk][1];
-    var p = Math.min(1, Math.max(0, (t - st.changedAt) / .5)), sc = .6 + .4 * easeOutBack(p);
-    var amp = .035 + .16 * st.level;
-    $("blobA").setAttribute("d", blobPath(t * 1.1, amp, 0, 95 * sc)); $("blobA").setAttribute("fill", col); $("blobA").setAttribute("opacity", (.35 + .15 * st.level) * Math.min(1, p / .35));
-    $("blobB").setAttribute("d", blobPath(-t * .9, amp * .85, 1.7, 78 * sc)); $("blobB").setAttribute("fill", col); $("blobB").setAttribute("opacity", (.55 + .15 * st.level) * Math.min(1, p / .35));
-    $("glow").style.background = col; $("glow2").style.background = col;
+    var colL = colors[st.spk][1];
+    earth(t, st);
     var lis = st.spk === ME ? PA : ME;
     var key = st.spk + "|" + st.lines.map(function (l) { return l.id; }).join(",") + "|" + Object.keys(st.tr).length + "|" + st.vol;
     if (key !== lastKey) { lastKey = key;
-      $("speakerImg").src = imgs[st.spk]; $("spkName").textContent = names[st.spk] + " · " + codes[st.spk]; $("spkLabel").style.color = colL;
-      $("listenerImg").src = imgs[lis]; $("listenerName").textContent = names[lis] + " · " + codes[lis]; $("listenerName").style.color = colors[lis][1];
       var h = "";
       for (var i = 0; i < st.lines.length; i++) { var l = st.lines[i], latest = i === st.lines.length - 1, c = colors[l.uid];
         var since = t - st.lineAt[l.id], cs = chunks(l.text), reveal = (latest && l.uid === PA && since < cs.length * .06 + .2) ? Math.min(cs.length, Math.floor(since / .06)) : -1;
@@ -434,7 +503,6 @@
       // 途中経過だけ差し替える(カラオケの進み)
       var latestCard = (function () { var all = cards.querySelectorAll(".card:not(.volatile)"); return all[all.length - 1]; })(); if (latestCard && st.lines.length) { var l2 = st.lines[st.lines.length - 1]; if (l2.uid === PA) { var since2 = t - st.lineAt[l2.id], cs2 = chunks(l2.text); var rev2 = since2 < cs2.length * .06 + .2 ? Math.min(cs2.length, Math.floor(since2 / .06)) : -1; var spans = latestCard.querySelectorAll(".txt span"); for (var y = 0; y < spans.length; y++) { var cls2 = rev2 < 0 || y < rev2 ? "k0" : (y === rev2 ? "k1" : "k2"); if (spans[y].className !== cls2) { spans[y].className = cls2; spans[y].style.background = cls2 === "k1" ? colors[PA][0] + "73" : ""; } } } }
     }
-    var bars = $("bars").children; for (var b = 0; b < 3; b++) { bars[b].style.height = (4 + 8 * Math.abs(Math.sin(t * 6 + b)) * (.4 + .6 * st.level)) + "px"; bars[b].style.background = colL; }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
