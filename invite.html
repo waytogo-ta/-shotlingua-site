@@ -280,7 +280,34 @@
   $("store").textContent     = T.store;
   $("wmSub").textContent = ({ja:"翻訳通話",ko:"번역 통화",zh:"翻译通话","zh-TW":"翻譯通話",yue:"翻譯通話"})[lang] || "Translated call";
 
-  if (validCode) {
+  // 【2026-10-02】グループの招待リンク(invite_code = 6文字のグループコード)。
+  //  「グループに入る場合は」このコードをコピー → アプリで貼る。App Store へ行くボタンを押した時も自動でコピーしておく
+  //  (インストールを挟むとリンクの中身は消えるので、クリップボードだけがまたげる)。
+  var gcode = (params.get("invite_code") || "").trim().toUpperCase();
+  var isGroup = /^[A-HJ-NP-Z2-9]{6}$/.test(gcode);
+  if (isGroup) {
+    var GS = ({
+      ja: {label: "グループに入る場合は、このコードをコピー", hint: "アプリを入れたら「友達とつながる」→「友達からコードをもらった？」に貼ってね"},
+      ko: {label: "그룹에 들어가려면 이 코드를 복사하세요", hint: "앱을 설치한 뒤 「친구와 연결하기」→「친구에게 코드를 받았나요?」에 붙여 넣어 주세요"},
+      zh: {label: "要加入群的话，请复制这个代码", hint: "安装应用后，在「和朋友连接」→「收到朋友的代码了吗？」里粘贴"},
+      "zh-TW": {label: "要加入群組的話，請複製這個代碼", hint: "安裝後在「和朋友連接」→「收到朋友的代碼了嗎？」貼上"},
+      en: {label: "To join the group, copy this code", hint: "After installing, paste it in “Connect with friends” → “Got a code from a friend?”"}
+    })[lang] || {label: "To join the group, copy this code", hint: "After installing, paste it in “Connect with friends” → “Got a code from a friend?”"};
+    $("codeWrap").style.display = "block";
+    $("codeLabel").textContent = GS.label;
+    $("codeHint").textContent = GS.hint;
+    $("codeText").textContent = gcode;
+    $("codePill").addEventListener("click", function () {
+      copyText(gcode, function () {
+        var hint = $("codeHint");
+        hint.textContent = T.copied; hint.classList.add("copied");
+        setTimeout(function () { hint.textContent = GS.hint; hint.classList.remove("copied"); }, 1800);
+      });
+    });
+    ["store", "store2"].forEach(function (k) {
+      var el = $(k); if (el) el.addEventListener("click", function () { copyText(gcode, function () {}); });
+    });
+  } else if (validCode) {
     $("codeWrap").style.display = "block";
     $("codeText").textContent = "@" + code;
     $("codePill").addEventListener("click", function () {
@@ -313,7 +340,7 @@
   if (inApp) $("hint").textContent = T.inApp;
   $("openApp").addEventListener("click", tryOpenApp);
   // コードがある時は自動遷移しない(コピーする前にページを離れさせない)。
-  if (isIOS && !inApp && id && !validCode) setTimeout(tryOpenApp, 350);
+  if (isIOS && !inApp && id && !validCode && !isGroup) setTimeout(tryOpenApp, 350);
   function tryOpenApp(e) {
     if (e) e.preventDefault();
     var start = Date.now();
