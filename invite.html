@@ -343,6 +343,8 @@
   if (isIOS && !inApp && id && !validCode && !isGroup) setTimeout(tryOpenApp, 350);
   function tryOpenApp(e) {
     if (e) e.preventDefault();
+    // アプリが無ければ App Store に飛ぶので、その前に(タップの直後に)グループのコードをコピーしておく。
+    if (isGroup) copyText(gcode, function () {});
     var start = Date.now();
     var t = setTimeout(function () { if (Date.now() - start < 1600) location.href = storeURL; }, 1200);
     window.location.href = appURL;
@@ -353,8 +355,9 @@
     else legacyCopy(text, done);
   }
   function legacyCopy(text, done) {
-    var ta = document.createElement("textarea"); ta.value = text; ta.setAttribute("readonly", "");
-    ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select();
+    var ta = document.createElement("textarea"); ta.value = text;
+    ta.style.position = "fixed"; ta.style.opacity = "0"; ta.style.fontSize = "16px"; document.body.appendChild(ta);
+    ta.focus(); ta.select(); try { ta.setSelectionRange(0, text.length); } catch (e2) {}
     try { document.execCommand("copy"); done(); } catch (err) {}
     document.body.removeChild(ta);
   }
