@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>ShotLingua</title>
+
+<!-- リンクプレビュー -->
+<meta property="og:title" content="ShotLingua 🌏" />
+<meta property="og:description" content="日本人や留学生と、翻訳チャットで言葉の壁なく話せるアプリ。" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="ShotLingua" />
+<meta property="og:image" content="https://shotlingua.app/appicon-poyo.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="apple-itunes-app" content="app-id=6760792510" />
+
+<style>
+  :root { --accent:#7C5CFC; --ink:#1c1c1e; --sub:#6b6b70; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; padding:0; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+    background:linear-gradient(160deg,#f6f4ff 0%,#fff 60%); color:var(--ink); min-height:100vh;
+    display:flex; align-items:center; justify-content:center; padding:24px; }
+  .card { width:100%; max-width:380px; text-align:center; background:#fff; border-radius:24px;
+    padding:32px 24px 28px; box-shadow:0 12px 40px rgba(90,63,224,.12); }
+  .badge { width:88px; height:88px; border-radius:22px; margin:0 auto 18px; display:block; object-fit:cover;
+    box-shadow:0 6px 18px rgba(90,63,224,.22); }
+  h1 { font-size:21px; line-height:1.4; margin:0 0 8px; }
+  p.sub { font-size:14px; line-height:1.6; color:var(--sub); margin:0 0 24px; }
+  .btn { display:block; width:100%; padding:15px; border-radius:14px; border:0; font-size:16px;
+    font-weight:700; cursor:pointer; text-decoration:none; margin-bottom:12px; }
+  .btn-primary { background:var(--accent); color:#fff; }
+  .btn-store { background:#000; color:#fff; }
+  .hint { font-size:12px; color:var(--sub); margin-top:14px; line-height:1.6; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <img class="badge" src="appicon-poyo.png" alt="ShotLingua" />
+    <h1>ShotLingua をはじめよう</h1>
+    <p class="sub">日本人や留学生と、翻訳チャットで言葉の壁なく話せるアプリ。</p>
+    <a class="btn btn-primary" id="openApp" href="#">アプリで開く</a>
+    <a class="btn btn-store" id="store" href="https://apps.apple.com/app/id6760792510">App Store でダウンロード</a>
+    <div class="hint" id="hint"></div>
+  </div>
+
+<script>
+(function () {
+  // マーケ/SNS 流入リンク: 招待ではないので id は無く、source/channel/campaign を引き継ぐ。
+  // アプリ側 AttributionManager.handle が解析して first-touch を保存する。
+  var params = new URLSearchParams(location.search);
+  var fwd = [];
+  function addParam(k, v) { v = (params.get(k) || "").trim(); if (v) fwd.push(encodeURIComponent(k) + "=" + encodeURIComponent(v)); }
+  ["source", "channel", "campaign", "invite_code", "inviter_user_id", "inviter_username"].forEach(addParam);
+  var appURL = fwd.length ? ("shotlingua://open?" + fwd.join("&")) : "shotlingua://open";
+  var storeURL = "https://apps.apple.com/app/id6760792510";
+  document.getElementById("openApp").setAttribute("href", appURL);
+
+  var ua = navigator.userAgent || "";
+  var inApp = /Instagram|FBAN|FBAV|Line\//i.test(ua);
+  var isIOS = /iPhone|iPad|iPod/i.test(ua);
+  if (inApp) {
+    document.getElementById("hint").textContent =
+      "うまく開けない場合は、右上の「…」から「外部ブラウザで開く」を選んでください。";
+  }
+  document.getElementById("openApp").addEventListener("click", tryOpenApp);
+  if (isIOS && !inApp) setTimeout(tryOpenApp, 350);
+
+  function tryOpenApp(e) {
+    if (e) e.preventDefault();
+    var start = Date.now();
+    var t = setTimeout(function () { if (Date.now() - start < 1600) location.href = storeURL; }, 1200);
+    window.location.href = appURL;
+    window.addEventListener("pagehide", function () { clearTimeout(t); });
+  }
+})();
+</script>
+</body>
+</html>
