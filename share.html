@@ -17,29 +17,31 @@
 <meta name="apple-itunes-app" content="app-id=6760792510" />
 
 <style>
+  /* 【2026-10-21】アプリの夜空の見た目に合わせる(白い昔の UI をやめる)。主ボタンはミント+紺の字。 */
   :root{
-    --purple:#6C4DF5; --purple-d:#5539DC; --purple-soft:#F1EDFE;
-    --ink:#24202F; --head:#14121C; --sub:#9B96AD; --faint:#B9B5C6;
-    --line:#F0EEF5; --chip:#EBE8F3; --bg:#FFFFFF;
+    --purple:#7FE3CC; --purple-d:#5FCFB6; --purple-soft:rgba(127,227,204,.16);
+    --ink:#EDEAF6; --head:#FFFFFF; --sub:rgba(255,255,255,.62); --faint:rgba(255,255,255,.42);
+    --line:rgba(255,255,255,.10); --chip:rgba(255,255,255,.18); --bg:#0B0E2A;
     --scrim:linear-gradient(to top, rgba(10,8,20,.62), rgba(10,8,20,0) 62%);
-    --cta-shadow:0 8px 20px rgba(108,77,245,.32);
-    --pill-shadow:0 4px 14px rgba(20,18,28,.12);
-    --card:#FFFFFF; --fade:#ffffff;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{ --bg:#0E0C16; --card:#17141F; --ink:#EDEAF6; --head:#EDEAF6;
-      --sub:rgba(255,255,255,.5); --faint:rgba(255,255,255,.38);
-      --line:rgba(255,255,255,.08); --chip:rgba(255,255,255,.14); --fade:#0E0C16; }
+    --cta-shadow:0 8px 24px rgba(127,227,204,.30);
+    --pill-shadow:0 4px 14px rgba(0,0,0,.35);
+    --card:#1A1C4A; --fade:#0B0E2A; --mintink:#100F35; --lav:#B8A9FF;
   }
   *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body{ margin:0; padding:0; }
   body{ font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif;
-    background:var(--bg); color:var(--ink); }
+    background:linear-gradient(180deg,#0B0E2A 0%,#151A45 60%,#1A1C4A 100%) fixed; color:var(--ink); min-height:100vh; }
+  body::before{ content:""; position:fixed; inset:0; pointer-events:none; opacity:.55;
+    background-image:radial-gradient(1px 1px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 72% 9%,#fff,transparent),
+      radial-gradient(1.5px 1.5px at 40% 32%,#cfc6ff,transparent),radial-gradient(1px 1px at 88% 44%,#fff,transparent),
+      radial-gradient(1px 1px at 22% 66%,#fff,transparent),radial-gradient(1.5px 1.5px at 64% 78%,#cfc6ff,transparent),
+      radial-gradient(1px 1px at 8% 90%,#fff,transparent),radial-gradient(1px 1px at 92% 86%,#fff,transparent); }
+  .wrap{ position:relative; }
   .wrap{ width:100%; max-width:430px; margin:0 auto; padding-bottom:150px; }
 
   /* header 44px */
   .hd{ height:44px; display:flex; align-items:center; gap:8px; padding:0 16px; }
-  .hd img{ width:22px; height:22px; border-radius:24%; }
+  .hd img{ width:28px; height:28px; border-radius:24%; }
   .hd b{ font-size:15px; color:var(--head); }
   .hd .dom{ margin-left:auto; font-size:12px; color:var(--sub); }
 
@@ -50,7 +52,7 @@
   .cover .meta{ position:absolute; left:16px; bottom:14px; z-index:2; display:flex; flex-direction:column; gap:7px; }
   .chiprow{ display:flex; gap:6px; align-items:center; }
   .rchip{ background:rgba(255,255,255,.94); color:#14121C; font-size:11px; font-weight:800; padding:4px 9px; border-radius:999px; }
-  .hot{ background:var(--purple); color:#fff; font-size:11px; font-weight:800; padding:4px 9px; border-radius:999px; }
+  .hot{ background:var(--purple); color:var(--mintink); font-size:11px; font-weight:800; padding:4px 9px; border-radius:999px; }
   .ctitle{ font-size:20px; font-weight:800; color:#fff; text-shadow:0 1px 6px rgba(0,0,0,.35); }
 
   /* 賑わい行 */
@@ -59,7 +61,7 @@
   .avstack .d{ width:26px; height:26px; border-radius:50%; margin-left:-9px; border:2px solid var(--bg); }
   .avstack .d:first-child{ margin-left:0; }
   .plus{ width:26px; height:26px; border-radius:50%; margin-left:-9px; border:2px solid var(--bg);
-    background:#EDEAF6; color:var(--purple); font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+    background:#2A2F6A; color:var(--purple); font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; }
   .buzz .t{ font-size:13px; font-weight:700; color:var(--ink); }
 
   /* messages */
@@ -77,15 +79,22 @@
 
   /* post */
   .pauthor{ display:flex; align-items:center; gap:11px; padding:0 16px; }
-  .pauthor .av40{ width:40px; height:40px; border-radius:50%; background:#EDEAF6; display:flex; align-items:center; justify-content:center; }
-  .pauthor .av40 svg{ width:22px; height:22px; fill:#b7b1d6; }
-  .pname{ font-size:15px; font-weight:800; color:var(--head); }
+  .pauthor .av40{ width:60px; height:60px; border-radius:50%; background:#2A2F6A; display:flex; align-items:center; justify-content:center;
+    overflow:hidden; flex:0 0 60px; box-shadow:0 0 0 2.5px var(--purple), 0 6px 18px rgba(127,227,204,.25); }
+  .pauthor .av40 img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .pauthor .av40 svg{ width:30px; height:30px; fill:#8F86C9; }
+  .pname{ font-size:18px; font-weight:800; color:var(--head); }
+  .puser{ font-size:13px; color:var(--sub); margin-top:1px; }
   .pmeta{ font-size:12px; color:var(--sub); display:flex; align-items:center; gap:6px; margin-top:1px; }
   .langbadge{ background:var(--purple-soft); color:var(--purple); font-size:11px; font-weight:800; padding:1px 7px; border-radius:5px; }
   .ptext{ font-size:16px; line-height:1.6; color:var(--ink); padding:12px 16px 0; white-space:pre-wrap; word-break:break-word; }
-  .pimg{ width:calc(100% - 32px); height:206px; object-fit:cover; border-radius:14px; margin:12px 16px 0; display:block; }
+  .pimg{ width:calc(100% - 32px); aspect-ratio:4/5; max-height:520px; object-fit:cover; border-radius:18px; margin:12px 16px 0; display:block;
+    box-shadow:0 10px 30px rgba(0,0,0,.35); }
+  .pimgs{ display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; padding:12px 16px 0; -webkit-overflow-scrolling:touch; }
+  .pimgs img{ flex:0 0 82%; aspect-ratio:4/5; object-fit:cover; border-radius:18px; scroll-snap-align:start; box-shadow:0 10px 30px rgba(0,0,0,.35); }
+  .pimgs::-webkit-scrollbar{ display:none; }
   .rx{ display:flex; gap:8px; padding:12px 16px 0; flex-wrap:wrap; }
-  .rx .p{ border:1px solid var(--chip); border-radius:999px; padding:5px 11px; font-size:13px; font-weight:700; color:var(--ink); }
+  .rx .p{ border:1px solid var(--chip); background:rgba(255,255,255,.06); border-radius:999px; padding:5px 11px; font-size:13px; font-weight:700; color:var(--ink); }
   .chead{ font-size:13px; font-weight:800; color:var(--sub); padding:14px 16px 2px; }
 
   /* cutoff (no lock) */
@@ -96,19 +105,18 @@
   .cut .skbars{ flex:1; }
   .cut .bar{ height:9px; border-radius:6px; margin-bottom:6px; background:#3A3550; }
   .cut .bar.nm{ width:34%; background:#2A2636; height:8px; }
-  .cut .fade{ position:absolute; inset:0; background:linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,.86) 55%, var(--fade)); }
-  @media (prefers-color-scheme: dark){ .cut .fade{ background:linear-gradient(to bottom, rgba(14,12,22,0), rgba(14,12,22,.86) 55%, var(--fade)); } }
+  .cut .fade{ position:absolute; inset:0; background:linear-gradient(to bottom, rgba(11,14,42,0), rgba(11,14,42,.86) 55%, var(--fade)); }
   .cut .pill{ position:absolute; left:50%; bottom:8px; transform:translateX(-50%); z-index:2;
     background:var(--card); box-shadow:var(--pill-shadow); border-radius:999px; padding:7px 15px; font-size:13px; font-weight:700; color:var(--head); white-space:nowrap; }
 
   .empty{ text-align:center; color:var(--sub); font-size:14px; padding:26px 24px 8px; line-height:1.6; }
 
   /* fixed CTA */
-  .cta{ position:fixed; left:0; right:0; bottom:0; z-index:10; background:var(--bg);
+  .cta{ position:fixed; left:0; right:0; bottom:0; z-index:10; background:rgba(11,14,42,.92); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
     padding:12px 16px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); }
   .cta .wrapin{ max-width:430px; margin:0 auto; }
   .cta a.main{ display:block; height:54px; line-height:54px; text-align:center; border-radius:16px;
-    background:var(--purple); color:#fff; font-size:17px; font-weight:800; text-decoration:none; box-shadow:var(--cta-shadow); }
+    background:var(--purple); color:var(--mintink); font-size:17px; font-weight:800; text-decoration:none; box-shadow:var(--cta-shadow); border-radius:999px; }
   .cta a.main:active{ background:var(--purple-d); }
   .cta .store{ text-align:center; font-size:13px; color:var(--sub); margin-top:10px; }
   .cta .store a{ color:var(--purple); text-decoration:underline; font-weight:700; }
@@ -127,7 +135,7 @@
     <div class="wrapin">
       <a class="main" id="openApp" href="#">アプリで続きを見る</a>
       <div class="store">アプリが無い方は <a href="https://apps.apple.com/app/id6760792510">App Storeへ</a></div>
-      <div class="tag">母語で打って、学習言語で読む翻訳SNS</div>
+      <div class="tag">言葉が違っても、世界中の人と友達になれる</div>
       <div class="lineNote" id="lineNote">うまく開けない時は、右上の「…」から「外部ブラウザで開く」を選んでください。</div>
     </div>
   </div>
@@ -161,6 +169,8 @@
     if("mapValue" in v){ var o={},f=v.mapValue.fields||{}; for(var k in f) o[k]=unwrap(f[k]); return o; }
     return null;
   }
+  function countryFlag(c){ c=String(c||"").toUpperCase(); if(!/^[A-Z]{2}$/.test(c)) return "";
+    return String.fromCodePoint(0x1F1E6+c.charCodeAt(0)-65, 0x1F1E6+c.charCodeAt(1)-65); }
   function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
   function hue(s){ var h=0; s=String(s||""); for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return PALETTE[h%PALETTE.length]; }
   function ago(ms){ if(!ms) return ""; var s=(Date.now()-ms)/1000;
@@ -225,17 +235,25 @@
     // みんなの投稿は公開コンテンツ → モザイク(ブラー途切れ)なしで丸ごと見せる。
     var rc=d.reactionCount||0, reactions=d.reactions||[], comments=d.comments||[];
     var cc=d.commentCount||0;
-    var flag=FLAGS[d.origLang]||"";
+    // 旗は投稿した人の国(無ければ出さない)。言語から決めると英語の人が全員 🇺🇸 になっていた。
+    var flag=countryFlag(d.authorCountry);
 
     var buzz = rc>0 ? '<div class="buzz" style="padding:16px 16px 0">'+avstack(rc,24)+
       '<span class="t">'+rc+'人がリアクションした'+(rc>3?' 🔥':'')+'</span></div>' : '';
 
-    var author='<div class="pauthor" style="margin-top:'+(rc>0?12:16)+'px"><div class="av40">'+PERSON+'</div>'+
-      '<div><div class="pname">'+esc(d.authorLabel||"ユーザー")+'</div>'+
-      '<div class="pmeta"><span>'+ago(d.createdAtMs)+'</span>'+(flag?'<span class="langbadge">'+flag+'</span>':'')+'</div></div></div>';
+    var face = d.authorIcon ? '<img src="'+esc(d.authorIcon)+'" alt="" onerror="this.remove()" />' : PERSON;
+    var uname = (d.authorLabel||"").charAt(0)==="@" ? d.authorLabel : "";
+    var title = d.authorName || d.authorLabel || "ユーザー";
+    var author='<div class="pauthor" style="margin-top:'+(rc>0?14:18)+'px"><div class="av40">'+face+'</div>'+
+      '<div><div class="pname">'+esc(title)+(flag?' <span style="font-size:16px">'+flag+'</span>':'')+'</div>'+
+      (uname && uname!==("@"+title) && uname!==title ? '<div class="puser">'+esc(uname)+'</div>' : '')+
+      '<div class="pmeta"><span>'+ago(d.createdAtMs)+'</span></div></div></div>';
 
     var text=d.text?'<div class="ptext">'+esc(d.text)+'</div>':'';
-    var img=d.imageURL?'<img class="pimg" src="'+esc(d.imageURL)+'" alt="" loading="lazy" />':'';
+    var list=(d.imageURLs&&d.imageURLs.length>1)?d.imageURLs:(d.imageURL?[d.imageURL]:[]);
+    var img = list.length>1
+      ? '<div class="pimgs">'+list.map(function(u){return '<img src="'+esc(u)+'" alt="" loading="lazy" />';}).join('')+'</div>'
+      : (list.length?'<img class="pimg" src="'+esc(list[0])+'" alt="" loading="lazy" />':'');
     var rx=reactions.length?'<div class="rx">'+reactions.map(function(r){return '<span class="p">'+esc(r.emoji)+' '+(r.count||0)+'</span>';}).join('')+'</div>':'';
 
     var cbody='';
