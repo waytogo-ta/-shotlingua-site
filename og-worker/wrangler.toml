@@ -4,6 +4,7 @@ compatibility_date = "2024-11-01"
 
 # shotlingua.app/share.html を Worker が処理する(要 Cloudflare プロキシON)。
 # 他のパス(index.html 等)は Worker を通らず GitHub Pages のまま。
+# 末尾 * が無いと `?id=...` 付きURLにマッチしない。ワイルドカードでクエリ付きも拾う。
 routes = [
-  { pattern = "shotlingua.app/share.html", zone_name = "shotlingua.app" }
+  { pattern = "shotlingua.app/share.html*", zone_name = "shotlingua.app" }
 ]

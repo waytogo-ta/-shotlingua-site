@@ -31,9 +31,10 @@ export default {
       return originResp;
     }
 
-    // スナップショットから見出し・説明を作る。失敗時は既定文言。
+    // スナップショットから見出し・説明・画像を作る。失敗時は既定文言＋静的バナー。
     let title = "ShotLingua で話題";
     let desc = "匿名で相談・交流できるアプリ ShotLingua。続きはアプリで読めます。";
+    let image = ""; // 動的プレビュー画像(ルームのカバー / 投稿の写真)。空なら静的バナーのまま。
     try {
       const r = await fetch(
         `https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents/shares/${encodeURIComponent(id)}?key=${FIREBASE_KEY}`
@@ -48,22 +49,36 @@ export default {
           const opText = msgs[0] && msgs[0].mapValue && msgs[0].mapValue.fields
             && msgs[0].mapValue.fields.text && msgs[0].mapValue.fields.text.stringValue;
           desc = opText ? clip(opText, 90) : desc;
+          if (f.roomImageURL && f.roomImageURL.stringValue) image = f.roomImageURL.stringValue;
         } else if (type === "post") {
           const author = (f.authorLabel && f.authorLabel.stringValue) || "";
           const text = (f.text && f.text.stringValue) || "";
           title = text ? clip(text, 42) : (author ? author + " の投稿" : "みんなの投稿");
           desc = author ? author + " · ShotLingua" : desc;
+          // 【2026-11-23 うた】投稿の写真はプレビュー(LINE 等)に出さない。静的バナーのまま。
         }
       }
     } catch (_) {}
 
-    // og:image はアプリアイコンのまま(触らない)。<title>/og:title/og:description のみ差し替え。
-    return new HTMLRewriter()
+    // <title>/og:title/og:description を動的化。画像(カバー/写真)があれば og:image も差し替え、
+    // サイズヒント(1200x630の静的バナー用)は実寸不明なので削除する。無ければ静的バナーのまま。
+    const transformed = new HTMLRewriter()
       .on('meta[property="og:title"]',        { element(e){ e.setAttribute("content", title); } })
       .on('meta[property="og:description"]',  { element(e){ e.setAttribute("content", desc); } })
       .on('meta[name="twitter:title"]',       { element(e){ e.setAttribute("content", title); } })
+      .on('meta[property="og:image"]',        { element(e){ if (image) e.setAttribute("content", image); } })
+      .on('meta[name="twitter:image"]',       { element(e){ if (image) e.setAttribute("content", image); } })
+      .on('meta[property="og:image:width"]',  { element(e){ if (image) e.remove(); } })
+      .on('meta[property="og:image:height"]', { element(e){ if (image) e.remove(); } })
       .on('title', { element(e){ e.setInnerContent(title + " · ShotLingua"); } })
       .transform(originResp);
+    // ⚠ id ごとに中身が変わる動的HTML。エッジにキャッシュさせない
+    //   (放置すると最初に取得した1件のタイトルが全 id に配られてしまう)。
+    const out = new Response(transformed.body, transformed);
+    out.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+    out.headers.set("CDN-Cache-Control", "no-store");
+    out.headers.delete("etag");
+    return out;
   },
 };
 

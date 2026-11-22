@@ -76,6 +76,8 @@
   .nm .tm{ font-size:11px; color:var(--sub); }
   .tx{ font-size:15px; line-height:1.55; color:var(--ink); white-space:pre-wrap; word-break:break-word; text-wrap:pretty; }
   .media{ margin-top:6px; font-size:12px; color:var(--sub); }
+  .plock{ margin:14px 16px 0; padding:34px 16px; border-radius:16px; text-align:center; font-size:14px; font-weight:700;
+          color:var(--sub); background:rgba(255,255,255,0.06); border:1px dashed rgba(255,255,255,0.18); }
 
   /* post */
   .pauthor{ display:flex; align-items:center; gap:11px; padding:0 16px; }
@@ -241,7 +243,8 @@
     var buzz = rc>0 ? '<div class="buzz" style="padding:16px 16px 0">'+avstack(rc,24)+
       '<span class="t">'+rc+'人がリアクションした'+(rc>3?' 🔥':'')+'</span></div>' : '';
 
-    var face = d.authorIcon ? '<img src="'+esc(d.authorIcon)+'" alt="" onerror="this.remove()" />' : PERSON;
+    // 【2026-11-23 うた「LINE で送ると その人の写真が見れちゃう」】アプリの外では顔(アイコン)も写真も出さない。
+    var face = PERSON;
     var uname = (d.authorLabel||"").charAt(0)==="@" ? d.authorLabel : "";
     var title = d.authorName || d.authorLabel || "ユーザー";
     var author='<div class="pauthor" style="margin-top:'+(rc>0?14:18)+'px"><div class="av40">'+face+'</div>'+
@@ -250,10 +253,9 @@
       '<div class="pmeta"><span>'+ago(d.createdAtMs)+'</span></div></div></div>';
 
     var text=d.text?'<div class="ptext">'+esc(d.text)+'</div>':'';
-    var list=(d.imageURLs&&d.imageURLs.length>1)?d.imageURLs:(d.imageURL?[d.imageURL]:[]);
-    var img = list.length>1
-      ? '<div class="pimgs">'+list.map(function(u){return '<img src="'+esc(u)+'" alt="" loading="lazy" />';}).join('')+'</div>'
-      : (list.length?'<img class="pimg" src="'+esc(list[0])+'" alt="" loading="lazy" />':'');
+    // 写真は URL を読まず、枚数だけ伝えて「アプリで見る」へ(写真の URL をページに載せない)。
+    var nimg=(d.imageURLs&&d.imageURLs.length)?d.imageURLs.length:(d.imageURL?1:0);
+    var img = nimg ? '<div class="plock">📷 写真'+(nimg>1?' '+nimg+'枚':'')+'は アプリで見られます</div>' : '';
     var rx=reactions.length?'<div class="rx">'+reactions.map(function(r){return '<span class="p">'+esc(r.emoji)+' '+(r.count||0)+'</span>';}).join('')+'</div>':'';
 
     var cbody='';
