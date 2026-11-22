@@ -254,7 +254,7 @@
 
     var text=d.text?'<div class="ptext">'+esc(d.text)+'</div>':'';
     // 写真は URL を読まず、枚数だけ伝えて「アプリで見る」へ(写真の URL をページに載せない)。
-    var nimg=(d.imageURLs&&d.imageURLs.length)?d.imageURLs.length:(d.imageURL?1:0);
+    var nimg=d.imageCount||((d.imageURLs&&d.imageURLs.length)?d.imageURLs.length:(d.imageURL?1:0));
     var img = nimg ? '<div class="plock">📷 写真'+(nimg>1?' '+nimg+'枚':'')+'は アプリで見られます</div>' : '';
     var rx=reactions.length?'<div class="rx">'+reactions.map(function(r){return '<span class="p">'+esc(r.emoji)+' '+(r.count||0)+'</span>';}).join('')+'</div>':'';
 
